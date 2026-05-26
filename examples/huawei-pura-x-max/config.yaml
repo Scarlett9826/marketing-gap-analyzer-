@@ -1,0 +1,31 @@
+# marketing-gap-analyzer example: Huawei Pura X Max
+# Copy this directory and modify for your own product analysis.
+project:
+  name: "华为 Pura X Max"
+  description: "华为 2026-04 发布的大阔折叠屏旗舰"
+  data_date: "2026-05-26"
+
+paths:
+  raw_user: "data/raw_user.json"
+  raw_official: "data/raw_official.json"
+  outputs: "output"
+
+thresholds:
+  OFFICIAL_HIGH_THRESHOLD: 5
+  USER_HIGH_MENTION_THRESHOLD: 4
+  SENTIMENT_NEGATIVE_THRESHOLD: -0.2
+  SENTIMENT_POSITIVE_THRESHOLD: 0.1
+
+official:
+  source_weights:
+    Slogan: 5
+    产品页文案: 4
+    发布会现场: 3
+    深度长文: 3
+    卖点拆解: 2
+    预热海报: 2
+    官方笔记: 2
+    KOL评测: 2
+    KOL评测（疑似投放）: 2
+    媒体转引的疑似Slogan: 2
+    default: 1

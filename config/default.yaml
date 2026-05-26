@@ -1,0 +1,42 @@
+# marketing-gap-analyzer default configuration
+# Customize this file for your product analysis.
+project:
+  name: "华为 Pura X Max"           # Product/brand name
+  description: "大阔折叠屏旗舰"       # Category description
+  data_date: "2026-05-26"            # Data collection date
+
+# Data file paths (relative to this config file, or absolute)
+paths:
+  raw_user: "data/raw_user.json"       # JSON array of user comments
+  raw_official: "data/raw_official.json"  # JSON array of official documents
+  outputs: "output"                    # Directory for all output files
+
+# Official document source weights
+official:
+  source_weights:
+    Slogan: 5
+    产品页文案: 4
+    发布会现场: 3
+    深度长文: 3
+    卖点拆解: 2
+    预热海报: 2
+    官方笔记: 2
+    KOL评测: 2
+    媒体转引的疑似Slogan: 2
+    default: 1
+
+# Classification thresholds
+thresholds:
+  OFFICIAL_HIGH_THRESHOLD: 5          # Official weighted score >= this = "pushed"
+  USER_HIGH_MENTION_THRESHOLD: 4      # User mentions >= this = "high discussion"
+  SENTIMENT_NEGATIVE_THRESHOLD: -0.2  # Sentiment <= this = "negative"
+  SENTIMENT_POSITIVE_THRESHOLD: 0.1   # Sentiment >= this = "positive"
+
+# Keyword dictionaries (fallback when LLM is unavailable)
+dictionaries:
+  official_selling_points: {}
+
+  user_selling_points: {}
+
+  positive_words: []
+  negative_words: []

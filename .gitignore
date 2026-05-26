@@ -1,0 +1,33 @@
+# Secrets & credentials
+.env
+**/weibo_cookie.json
+**/cookies.json
+**/cookies.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Data (raw data with PII should not be committed)
+data/raw_*
+*.bak
+
+# Crawler outputs
+**/WeiboCommentJSON/
+**/结果文件/
+**/output/*.csv
+**/output/*.json
+crawls/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
