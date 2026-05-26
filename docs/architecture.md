@@ -14,14 +14,15 @@ marketing-gap-analyzer/
 │   ├── analysis/
 │   │   └── gap_matrix.py      # GAP matrix classification
 │   ├── renderers/
-│   │   ├── feishu_md.py       # Feishu Markdown report
-│   │   └── html.py            # HTML report (optional)
+│   │   └── feishu_md.py       # Feishu Markdown report
 │   └── utils/
-│       └── text_clean.py      # Text cleaning utilities
+│       ├── llm.py             # OpenAI-compatible chat JSON helper
+│       └── text.py            # Text helpers (shorten, alias matching)
 ├── config/
 │   └── default.yaml           # Default configuration template
 ├── examples/
 │   └── huawei-pura-x-max/     # Complete case study
+├── tests/                     # Pytest unit tests
 ├── docs/
 │   ├── methodology.md         # GAP framework explanation
 │   ├── architecture.md        # This file
@@ -38,72 +39,67 @@ marketing-gap-analyzer/
 
 ```
 cli.py
-  ├── config.py          ← .env + config.yaml
-  ├── extractors/official.py
-  │     └── config.py (dictionaries, weights)
-  ├── extractors/user.py
-  │     └── config.py (dictionaries, sentiment words)
-  ├── analysis/gap_matrix.py
-  │     └── config.py (thresholds)
-  └── renderers/feishu_md.py
-        └── config.py (project name, paths)
+  ├── config.py            ← .env + config.yaml
+  ├── utils/llm.py         ← config.py
+  ├── extractors/official.py  ← config.py + utils/llm.py
+  ├── extractors/user.py      ← config.py + utils/llm.py
+  ├── analysis/gap_matrix.py  ← config.py
+  └── renderers/feishu_md.py  ← config.py + utils/text.py
 ```
 
 ## Data Flow
 
 ```
-                   ┌─────────────────────┐
-                   │  raw_official.json   │
-                   │  (JSON array)         │
-                   └──────────┬──────────┘
-                              │
-                              ▼
-                   ┌─────────────────────┐
-                   │  extract_official() │──→ official_selling_points.json
-                   │  LLM / dict fallback│
-                   └─────────────────────┘
-                              │
-                              │   ┌─────────────────────┐
-                              │   │  raw_user.json       │
-                              │   │  (JSON array)         │
-                              │   └──────────┬──────────┘
-                              │              │
-                              │              ▼
-                              │   ┌─────────────────────┐
-                              │   │  extract_user()     │──→ user_voice.json
-                              │   │  LLM / dict fallback│
-                              │   └─────────────────────┘
-                              │              │
-                              └──────┬───────┘
-                                     ▼
-                          ┌─────────────────────┐
-                          │  run_gap_analysis() │──→ gap_matrix.json
-                          │  threshold classify │
-                          └─────────────────────┘
-                                     │
-                                     ▼
-                          ┌─────────────────────┐
-                          │  render()           │──→ report.md
-                          │  Feishu Markdown    │
-                          └─────────────────────┘
+                  ┌─────────────────────┐
+                  │  raw_official.json   │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │  extract_official() │──→ official_selling_points.json
+                  │  LLM / dict fallback│
+                  └─────────────────────┘
+                             │
+                             │   ┌─────────────────────┐
+                             │   │  raw_user.json       │
+                             │   └──────────┬──────────┘
+                             │              │
+                             │              ▼
+                             │   ┌─────────────────────┐
+                             │   │  extract_user()     │──→ user_voice.json
+                             │   │  LLM / dict fallback│
+                             │   └─────────────────────┘
+                             │              │
+                             └──────┬───────┘
+                                    ▼
+                         ┌─────────────────────┐
+                         │  run_gap_analysis() │──→ gap_matrix.json
+                         │  threshold classify │
+                         └─────────────────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │  render()           │──→ report.md
+                         │  Feishu Markdown    │
+                         └─────────────────────┘
 ```
 
 ## Config Priority
 
 Settings are loaded in this order (later overrides earlier):
-1. Built-in Python defaults (in `config.py`)
-2. `.env` file (secrets like API keys)
-3. `config.yaml` (project-specific settings)
-4. Command-line arguments
+1. Built-in Python defaults (sentiment words, source weights)
+2. `.env` file (LLM secrets)
+3. `config.yaml` (project-specific settings + selling-point dictionaries)
+4. Command-line `--output` overrides for individual steps
 
 ## Data Format Specifications
 
-### raw_official.json (input)
+### `raw_official.json` (input)
 ```json
 [
   {
     "source": "源名称",
-    "type": "来源类型 (Slogan/产品页文案/发布会/...)", 
+    "type": "Slogan | 产品页文案 | 发布会现场 | 深度长文 | 卖点拆解 | KOL评测",
     "content": "完整文案内容",
     "url": "https://...",
     "verifiable": "验证方式"
@@ -111,19 +107,19 @@ Settings are loaded in this order (later overrides earlier):
 ]
 ```
 
-### raw_user.json (input)
+### `raw_user.json` (input)
 ```json
 [
   {
-    "source": "平台名称",
-    "post_id": "唯一标识",
-    "note_id": "笔记/视频ID",
+    "source": "微博评论 | B站评论 | 小红书评论 | ...",
+    "post_id": "唯一评论 ID",
+    "note_id": "原帖/视频/笔记 ID",
     "content": "评论内容"
   }
 ]
 ```
 
-### gap_matrix.json (output)
+### `gap_matrix.json` (output)
 ```json
 [
   {
@@ -134,6 +130,7 @@ Settings are loaded in this order (later overrides earlier):
     "user_positive": 6,
     "user_negative": 21,
     "sentiment_score": -0.14,
+    "penetration_ratio": 3.25,
     "category": "③ 翻车",
     "user_negative_examples": ["..."],
     "user_positive_examples": ["..."]

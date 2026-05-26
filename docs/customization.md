@@ -7,19 +7,20 @@ Create a new directory with your own data:
 ```
 my-product-analysis/
 ├── data/
-│   ├── raw_official.json     # Your competitor's docs
-│   └── raw_user.json         # Your user comments
+│   ├── raw_official.json     # Competitor docs
+│   └── raw_user.json         # User comments
 ├── config.yaml               # Your config
 └── output/                   # Generated reports
 ```
 
-Copy `examples/huawei-pura-x-max/config.yaml` and update:
+Copy `config/default.yaml` (or `examples/huawei-pura-x-max/config.yaml`) and update:
 
 ```yaml
 project:
-  name: "品牌名称 产品型号"
-  description: "品类定位"
-  data_date: "2026-12-01"
+  name: "Your Product"
+  brand: "BrandName"          # Used in report copy ("BrandName invested X points...")
+  description: "Category positioning"
+  data_date: "2026-01-01"
 
 paths:
   raw_user: "data/raw_user.json"
@@ -29,7 +30,7 @@ paths:
 
 ## 2. Adjust Thresholds
 
-Based on your data volume:
+Pick thresholds based on data volume:
 
 | Data volume | OFFICIAL_HIGH | USER_HIGH |
 |---|---|---|
@@ -37,69 +38,91 @@ Based on your data volume:
 | 500-2000 | 5 | 4 |
 | 2000+ | 8 | 8 |
 
-## 3. Customize Dictionaries
+## 3. Customize Selling-Point Dictionaries
 
-Edit `src/marketing_gap/config.py`:
+Dictionaries are now defined per-project in `config.yaml` — no code edits needed.
 
-### Official selling point dictionary
-Update `DEFAULT_OFFICIAL_DICT` — each entry maps a standardized selling point name to its keyword aliases:
-
-```python
-DEFAULT_OFFICIAL_DICT = {
-    "新卖点名称": ["关键词1", "关键词2", "关键词3"],
-}
+```yaml
+dictionaries:
+  official_selling_points:
+    "卖点A": ["关键词1", "关键词2"]
+    "卖点B": ["关键词3"]
+  user_selling_points:
+    "电池续航": ["电池", "续航", "电量", "耗电"]
+    "价格":     ["价格", "贵", "便宜", "性价比"]
 ```
 
-### User selling point dictionary
-Update `DEFAULT_USER_DICT` — same structure, but user-facing language:
+For long lists, store dictionaries in a separate YAML file and reference it:
 
-```python
-DEFAULT_USER_DICT = {
-    "电池续航": ["电池", "续航", "电量", "耗电"],
-}
+```yaml
+dictionaries:
+  official_selling_points: dictionaries/official.yaml
+  user_selling_points:     dictionaries/user.yaml
 ```
 
-### Sentiment words
-Update `DEFAULT_POSITIVE_WORDS` and `DEFAULT_NEGATIVE_WORDS`:
+## 4. Override Sentiment Words
 
-```python
-DEFAULT_POSITIVE_WORDS = {"好", "快", "强", "喜欢", ...}
-DEFAULT_NEGATIVE_WORDS = {"差", "慢", "弱", "讨厌", ...}
+Built-in Chinese sentiment words cover common cases. To override:
+
+```yaml
+dictionaries:
+  positive_words: ["好", "棒", "顶", "丝滑"]
+  negative_words: ["差", "烂", "翻车", "拉胯"]
 ```
 
-## 4. Add a New Platform
+## 5. Adjust Source Weights
 
-1. Add your crawler in `src/marketing_gap/crawlers/`
-2. Output data in the same `raw_user.json` format:
-   ```json
-   {
-     "source": "新平台名称",
-     "post_id": "unique_id",
-     "note_id": "parent_id",
-     "content": "评论内容"
-   }
-   ```
-3. Update `feishu_md.py` to add evidence links for the new platform
-
-## 5. Add Source Weights
-
-In `config.yaml`:
 ```yaml
 official:
   source_weights:
-    新来源类型: 5
+    Slogan: 5
+    产品页文案: 4
+    发布会现场: 3
+    自定义来源类型: 2
     default: 1
 ```
 
 ## 6. Use LLM Extraction
 
-Set your API key in `.env`:
+Set your API key in `.env` next to `config.yaml`:
+
 ```env
 DEEPSEEK_API_KEY=sk-your-key
+LLM_BASE_URL=https://api.deepseek.com
+LLM_MODEL=deepseek-chat
 ```
 
-Without LLM, the tool falls back to rule-based keyword matching (less accurate but works offline).
+Compatible providers (OpenAI chat-completions API):
 
-## 7. Create a Custom Renderer
+| Provider | LLM_BASE_URL | LLM_MODEL |
+|---|---|---|
+| DeepSeek | `https://api.deepseek.com` | `deepseek-chat` |
+| OpenAI | `https://api.openai.com` | `gpt-4o-mini` |
+| Moonshot | `https://api.moonshot.cn` | `moonshot-v1-8k` |
 
-Subclass or copy the renderer in `src/marketing_gap/renderers/`. The renderer receives the gap_matrix and returns a string.
+Without an API key, the tool falls back to dictionary matching.
+
+## 7. Add a New Platform
+
+Add a fresh source name to `raw_user.json`:
+
+```json
+{
+  "source": "新平台名称",
+  "post_id": "unique_id",
+  "note_id": "parent_id",
+  "content": "评论内容"
+}
+```
+
+Then add a link template in `src/marketing_gap/renderers/feishu_md.py` →
+`PLATFORM_LINK_TEMPLATES`:
+
+```python
+PLATFORM_LINK_TEMPLATES["新平台名称"] = lambda note, post: f"https://example.com/{note}/{post}"
+```
+
+## 8. Custom Renderer
+
+Drop a new module in `src/marketing_gap/renderers/` exposing a `render(config_path, ...)`
+function. Wire it up by importing in `cli.py` or by calling it directly from your own script.

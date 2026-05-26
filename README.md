@@ -1,14 +1,23 @@
 # marketing-gap-analyzer
 
-> **Competitor marketing GAP analysis tool** — compare what competitors say vs. what users actually talk about. Identify which selling points penetrate, which backfire, and which are genuine user needs.
+> Compare what competitors say vs. what users actually talk about.
+> Identify which selling points penetrate, which backfire, and which reflect
+> genuine user needs.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](pyproject.toml)
 
 ---
 
 ## Why
 
-Product Marketing Managers (PMMs) spend weeks manually combing through competitor press releases, KOL reviews, and social comments to figure out: **"What should our next product messaging be?"**
+Product Marketing Managers spend weeks combing through competitor press releases,
+KOL reviews, and social comments to figure out **what their next product
+messaging should be**.
 
-This tool automates the core analysis: align competitor official selling points against real user discussions from social platforms, and classify every selling point into 4 actionable categories.
+This tool automates the core analysis: cross-reference competitor official
+selling points against real user discussions from social platforms, and classify
+every selling point into 4 actionable categories.
 
 ---
 
@@ -19,92 +28,118 @@ This tool automates the core analysis: align competitor official selling points 
 | **Competitor pushes it hard** | ① Resonance ✅ / ③ Backfire 🚨 | ② Invisible ⚠️ |
 | **Competitor barely mentions it** | ④ User-driven 💡 | — Weak signal |
 
-**Actionable insight per category:**
-- **① Resonance**: The competitor landed this point. Match or counter.
-- **② Invisible**: They wasted marketing spend. Don't make the same mistake.
-- **③ Backfire**: Real product gap. Your opportunity to win on this dimension.
-- **④ User-driven**: Genuine user needs they're ignoring. Claim this territory.
+| Category | Meaning | What to do |
+|---|---|---|
+| **① Resonance** | Competitor landed the message; users repeat it positively | Match or counter with a stronger claim |
+| **② Invisible** | Competitor wasted marketing budget; message didn't land | Avoid the same mistake; investigate why |
+| **③ Backfire** | Users heard it and hate it; product reality ≠ marketing | Your competitive opening |
+| **④ User-driven** | Users discuss it without prompting; reflects real product experience | Genuine value — claim or fix |
 
 ---
 
 ## Quickstart
 
-### Prerequisites
-- Python 3.10+
-- `pip install pyyaml requests`
+### 1. Install
 
-### 1. Prepare your data
+```bash
+pip install -e .
+# or
+pip install -r requirements.txt
+```
 
-You need two JSON files:
+### 2. Prepare Data
 
-**`raw_official.json`** — competitor's official marketing copy:
+Two JSON files are required.
+
+**`data/raw_official.json`** — competitor's official marketing copy:
 ```json
 [
   {
-    "source": "华为商城产品页",
+    "source": "Product Page",
     "type": "产品页文案",
-    "content": "华为Pura X Max搭载全新鸿蒙HarmonyOS 6系统...",
+    "content": "Full marketing copy text...",
     "url": "https://example.com/product",
-    "verifiable": "webfetch 验证 URL 返回200"
+    "verifiable": "fetched 2026-05-26 status 200"
   }
 ]
 ```
 
-**`raw_user.json`** — user comments from social platforms:
+**`data/raw_user.json`** — user comments from social platforms:
 ```json
 [
   {
     "source": "微博评论",
-    "post_id": "123456",
-    "note_id": "789012",
-    "content": "这个价格也太贵了..."
+    "post_id": "5103030394562112",
+    "note_id": "数码闲聊站",
+    "content": "这价格也太贵了..."
   }
 ]
 ```
 
-### 2. Create a config file
+### 3. Configure
 
-Copy `examples/huawei-pura-x-max/config.yaml` and customize the project name and thresholds.
+Copy [`config/default.yaml`](config/default.yaml) to your project and customize.
+At minimum, set the project name, brand, and selling-point dictionaries.
 
-### 3. Run the full pipeline
+### 4. (Optional) Set LLM Key
 
 ```bash
-mgap --config your-project/config.yaml analyze
+cp .env.example .env
+# Edit .env with your DeepSeek/OpenAI key
 ```
 
-This runs 4 steps:
-1. Extract official selling points from your documents
-2. Extract user voice from comments  
-3. Cross-reference → GAP matrix
-4. Render → Feishu-friendly Markdown report
+Without an LLM key, the tool falls back to dictionary keyword matching.
 
-Output goes to `your-project/output/`.
+### 5. Run
+
+```bash
+mgap -c config.yaml analyze
+```
+
+This runs the full 4-step pipeline:
+
+1. Extract official selling points
+2. Extract user voice (mentions + sentiment)
+3. Build GAP matrix (cross-reference & classify)
+4. Render Feishu Markdown report
+
+Output goes to your configured `outputs/` directory.
+
+---
+
+## CLI
+
+```
+mgap [-c CONFIG] [COMMAND] [-o OUTPUT]
+
+Commands:
+  analyze            Run full pipeline (default)
+  extract-official   Step 1 only — official selling points
+  extract-user       Step 2 only — user voice
+  gap-matrix         Step 3 only — classification matrix
+  render             Step 4 only — Feishu Markdown report
+
+Examples:
+  mgap                                    # uses ./config.yaml, runs analyze
+  mgap -c examples/foo/config.yaml
+  mgap -c config.yaml extract-user -o out/voice.json
+```
 
 ---
 
 ## Full Example
 
-See the [Huawei Pura X Max case study](examples/huawei-pura-x-max/) for a complete walkthrough with real data (962 user comments, 39 official documents).
-
----
-
-## Commands
-
-| Command | Description |
-|---|---|
-| `mgap -c config.yaml analyze` | Full pipeline (default) |
-| `mgap -c config.yaml extract-official` | Step 1 only |
-| `mgap -c config.yaml extract-user` | Step 2 only |
-| `mgap -c config.yaml gap-matrix` | Step 3 only |
-| `mgap -c config.yaml render` | Step 4 only |
+See the [Huawei Pura X Max case study](examples/huawei-pura-x-max/) for a
+complete walkthrough with real data (962 user comments, 39 official documents,
+40 classified selling points).
 
 ---
 
 ## Data Collection
 
-The analysis pipeline is data-source-agnostic — it works with any platform data as long as you provide the JSON files.
+The pipeline is data-source-agnostic — it works with any platform as long as
+you provide the JSON files. For Chinese social media we recommend:
 
-For Chinese social media collection, we recommend:
 - **Weibo**: [1dyer/weibo-comment-crawler](https://github.com/1dyer/weibo-comment-crawler)
 - **Bilibili / Xiaohongshu**: [MediaCrawler](https://github.com/NanmiCoder/MediaCrawler)
 
@@ -112,12 +147,23 @@ For Chinese social media collection, we recommend:
 
 ## Customization
 
-- **Selling point dictionaries**: Edit `config.py`'s `DEFAULT_OFFICIAL_DICT` / `DEFAULT_USER_DICT` for your product category
-- **Thresholds**: Adjust in `config.yaml` (`OFFICIAL_HIGH_THRESHOLD`, `USER_HIGH_MENTION_THRESHOLD`, etc.)
-- **Source weights**: Customize per-source weights in `config.yaml`
+See [docs/customization.md](docs/customization.md) for detailed guides on:
+
+- Adapting to a new product category
+- Adjusting thresholds for your data volume
+- Adding new source platforms
+- Writing a custom renderer
+
+---
+
+## Documentation
+
+- [`docs/methodology.md`](docs/methodology.md) — GAP framework explanation
+- [`docs/architecture.md`](docs/architecture.md) — Module structure & data flow
+- [`docs/customization.md`](docs/customization.md) — Customization guide
 
 ---
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).

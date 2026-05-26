@@ -1,0 +1,168 @@
+{
+  "summary": {
+    "total_official_docs": 39,
+    "unique_selling_points": 16
+  },
+  "selling_points_ranked": [
+    {
+      "selling_point": "大阔折叠形态",
+      "raw_count": 13,
+      "weighted_score": 32,
+      "sources": [
+        "B站KOL-TP来啦/KOL评测",
+        "B站KOL-小白测评/KOL评测",
+        "B站KOL-我是HYK/KOL评测",
+        "B站KOL-热男HotGuys/KOL评测",
+        "B站KOL-科技美学/KOL评测",
+        "B站KOL-钟文泽/KOL评测",
+        "B站华为终端官方号/发布会现场",
+        "华为商城产品页/产品页文案",
+        "小红书-华为终端官方账号/官方笔记",
+        "快科技（微博头条）/深度长文",
+        "新华网/深度长文",
+        "网易科客/深度长文",
+        "雷科技/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "外屏5.4英寸",
+      "raw_count": 6,
+      "weighted_score": 20,
+      "sources": [
+        "B站KOL-Ted说/KOL评测",
+        "B站KOL-我是HYK/KOL评测",
+        "华为商城产品页/产品页文案"
+      ]
+    },
+    {
+      "selling_point": "麒麟9030Pro",
+      "raw_count": 5,
+      "weighted_score": 16,
+      "sources": [
+        "华为商城产品页/产品页文案",
+        "快科技（微博头条）/深度长文",
+        "网易科客/深度长文",
+        "雷科技/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "小艺伴随式AI",
+      "raw_count": 5,
+      "weighted_score": 15,
+      "sources": [
+        "华为商城产品页/产品页文案",
+        "新华网/深度长文",
+        "新浪微博数码博主（科技头条）/KOL评测",
+        "雷科技/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "第二代红枫原色",
+      "raw_count": 5,
+      "weighted_score": 15,
+      "sources": [
+        "华为商城产品页/产品页文案",
+        "快科技（微博头条）/深度长文",
+        "新华网/深度长文",
+        "网易科客/深度长文",
+        "雷科技/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "大内屏7.7英寸",
+      "raw_count": 4,
+      "weighted_score": 13,
+      "sources": [
+        "华为商城产品页/产品页文案",
+        "新华网/深度长文",
+        "新浪微博数码博主（科技头条）/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "鸿蒙HarmonyOS6",
+      "raw_count": 3,
+      "weighted_score": 9,
+      "sources": [
+        "B站KOL-我是HYK/KOL评测",
+        "华为商城产品页/产品页文案",
+        "快科技（微博头条）/深度长文"
+      ]
+    },
+    {
+      "selling_point": "RYYB双滤光",
+      "raw_count": 3,
+      "weighted_score": 8,
+      "sources": [
+        "快科技（微博头条）/深度长文",
+        "网易科客/深度长文",
+        "雷科技/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "天生会画",
+      "raw_count": 2,
+      "weighted_score": 6,
+      "sources": [
+        "华为商城产品页/产品页文案",
+        "新浪微博数码博主（科技头条）/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "十档可变光圈",
+      "raw_count": 2,
+      "weighted_score": 6,
+      "sources": [
+        "新华网/深度长文",
+        "网易科客/深度长文"
+      ]
+    },
+    {
+      "selling_point": "120Hz LTPO屏",
+      "raw_count": 1,
+      "weighted_score": 4,
+      "sources": [
+        "华为商城产品页/产品页文案"
+      ]
+    },
+    {
+      "selling_point": "M-Pen手写笔",
+      "raw_count": 1,
+      "weighted_score": 4,
+      "sources": [
+        "华为商城产品页/产品页文案"
+      ]
+    },
+    {
+      "selling_point": "超光变主摄",
+      "raw_count": 1,
+      "weighted_score": 4,
+      "sources": [
+        "华为商城产品页/产品页文案"
+      ]
+    },
+    {
+      "selling_point": "第二代昆仑玻璃",
+      "raw_count": 1,
+      "weighted_score": 4,
+      "sources": [
+        "华为商城产品页/产品页文案"
+      ]
+    },
+    {
+      "selling_point": "潜望长焦",
+      "raw_count": 1,
+      "weighted_score": 2,
+      "sources": [
+        "新浪微博数码博主（科技头条）/KOL评测"
+      ]
+    },
+    {
+      "selling_point": "eSIM支持",
+      "raw_count": 1,
+      "weighted_score": 2,
+      "sources": [
+        "新浪微博数码博主（科技头条）/KOL评测"
+      ]
+    }
+  ]
+}

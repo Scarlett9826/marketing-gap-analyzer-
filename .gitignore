@@ -10,17 +10,9 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-
-# Data (raw data with PII should not be committed)
-data/raw_*
-*.bak
-
-# Crawler outputs
-**/WeiboCommentJSON/
-**/结果文件/
-**/output/*.csv
-**/output/*.json
-crawls/
+.pytest_cache/
+.coverage
+htmlcov/
 
 # IDE
 .idea/
@@ -31,3 +23,14 @@ crawls/
 
 # Logs
 *.log
+*.bak
+
+# User-generated raw data and outputs (but allow example/* to be checked in)
+/data/
+!examples/**/data/
+/output/
+!examples/**/output/
+
+# Crawler temporary outputs
+**/WeiboCommentJSON/
+crawls/

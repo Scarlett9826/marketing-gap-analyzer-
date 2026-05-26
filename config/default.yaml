@@ -1,17 +1,31 @@
-# marketing-gap-analyzer default configuration
-# Customize this file for your product analysis.
+# marketing-gap-analyzer — generic configuration template
+# Copy this file to your own project directory and customize.
+
 project:
-  name: "华为 Pura X Max"           # Product/brand name
-  description: "大阔折叠屏旗舰"       # Category description
-  data_date: "2026-05-26"            # Data collection date
+  name: "Your Product Name"            # e.g. "iPhone 16 Pro"
+  brand: "Brand"                       # e.g. "Apple"; used in report copy
+  description: "Category positioning"  # e.g. "compact flagship"
+  data_date: "2026-01-01"
+  version: "1"
 
 # Data file paths (relative to this config file, or absolute)
 paths:
-  raw_user: "data/raw_user.json"       # JSON array of user comments
-  raw_official: "data/raw_official.json"  # JSON array of official documents
-  outputs: "output"                    # Directory for all output files
+  raw_user: "data/raw_user.json"
+  raw_official: "data/raw_official.json"
+  outputs: "output"
 
-# Official document source weights
+# Classification thresholds
+# Tune based on data volume:
+#   100-500 comments  → OFFICIAL_HIGH=3, USER_HIGH=2
+#   500-2000 comments → OFFICIAL_HIGH=5, USER_HIGH=4
+#   2000+ comments    → OFFICIAL_HIGH=8, USER_HIGH=8
+thresholds:
+  OFFICIAL_HIGH_THRESHOLD: 5
+  USER_HIGH_MENTION_THRESHOLD: 4
+  SENTIMENT_POSITIVE_THRESHOLD: 0.1
+  SENTIMENT_NEGATIVE_THRESHOLD: -0.2
+
+# Source weights (override defaults if needed)
 official:
   source_weights:
     Slogan: 5
@@ -25,18 +39,20 @@ official:
     媒体转引的疑似Slogan: 2
     default: 1
 
-# Classification thresholds
-thresholds:
-  OFFICIAL_HIGH_THRESHOLD: 5          # Official weighted score >= this = "pushed"
-  USER_HIGH_MENTION_THRESHOLD: 4      # User mentions >= this = "high discussion"
-  SENTIMENT_NEGATIVE_THRESHOLD: -0.2  # Sentiment <= this = "negative"
-  SENTIMENT_POSITIVE_THRESHOLD: 0.1   # Sentiment >= this = "positive"
-
-# Keyword dictionaries (fallback when LLM is unavailable)
+# Selling-point dictionaries (REQUIRED for rule-based fallback when no LLM key set)
+# Keys are canonical names; values are alias lists.
+# Inline format:
 dictionaries:
-  official_selling_points: {}
+  official_selling_points:
+    # "卖点A": ["关键词1", "关键词2"]
+  user_selling_points:
+    # "电池续航": ["电池", "续航", "电量", "耗电"]
+    # "价格":     ["价格", "贵", "便宜", "性价比"]
 
-  user_selling_points: {}
+  # Optional: override generic sentiment word lists
+  # positive_words: ["好", "棒", "顶"]
+  # negative_words: ["差", "烂", "翻车"]
 
-  positive_words: []
-  negative_words: []
+  # Alternative: load dictionaries from external YAML file
+  # official_selling_points: dictionaries/official.yaml
+  # user_selling_points:     dictionaries/user.yaml
