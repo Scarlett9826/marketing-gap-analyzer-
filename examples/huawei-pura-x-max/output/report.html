@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华为 Pura X Max · GAP 分析报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f6fa; color: #2d3436; line-height: 1.7; }
+.container { max-width: 1180px; margin: 0 auto; padding: 40px 24px; }
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 16px; padding: 48px; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.header h1 { font-size: 30px; margin-bottom: 8px; }
+.header .subtitle { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
+.header .meta { font-size: 13px; opacity: 0.75; line-height: 1.9; }
+.header .badge { display: inline-block; background: rgba(255,255,255,0.15); color: white; padding: 3px 12px; border-radius: 12px; font-size: 12px; margin-right: 4px; margin-bottom: 4px; }
+.section { background: white; border-radius: 12px; padding: 32px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section h2 { font-size: 22px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #0984e3; display: inline-block; }
+.section h2 .small { font-size: 14px; font-weight: normal; color: #636e72; margin-left: 8px; }
+.metrics { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.metric-card { background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border: 1px solid #e1e4e8; border-radius: 12px; padding: 20px 24px; text-align: center; flex: 1; min-width: 140px; }
+.metric-card .num { font-size: 36px; font-weight: 700; color: #0984e3; }
+.metric-card .label { font-size: 13px; color: #636e72; margin-top: 4px; }
+.metric-card.green .num { color: #00b894; }
+.metric-card.red .num { color: #d63031; }
+.metric-card.yellow .num { color: #f39c12; }
+.metric-card.purple .num { color: #9b59b6; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; margin: 2px 4px 2px 0; }
+.badge-blue { background: #d6eaf8; color: #1a5276; }
+.badge-purple { background: #e8daef; color: #6c3483; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+th { background: #0984e3; color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+tr:hover { background: #f1f2f6; }
+tr.cat-overturn { background: #ffe5e5; }
+tr.cat-success { background: #d4edda; }
+tr.cat-fail { background: #fff3cd; }
+tr.cat-organic { background: #e8daef; }
+tr.cat-weak { background: #f5f5f5; color: #999; }
+.sent-pos { color: #00b894; font-weight: 600; }
+.sent-neg { color: #d63031; font-weight: 600; }
+.sent-neutral { color: #636e72; font-weight: 600; }
+.gap-card { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.gap-card.cat-overturn { border-left-color: #d63031; background: linear-gradient(135deg, #fff 0%, #ffe5e5 100%); }
+.gap-card.cat-success { border-left-color: #00b894; background: linear-gradient(135deg, #fff 0%, #d4edda 100%); }
+.gap-card.cat-fail { border-left-color: #fdcb6e; background: linear-gradient(135deg, #fff 0%, #fff3cd 100%); }
+.gap-card.cat-organic { border-left-color: #9b59b6; background: linear-gradient(135deg, #fff 0%, #e8daef 100%); }
+.gap-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.gap-card-head h3 { font-size: 18px; }
+.cat-badge { font-size: 12px; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.cat-badge.cat-overturn { background: #d63031; color: white; }
+.cat-badge.cat-success { background: #00b894; color: white; }
+.cat-badge.cat-fail { background: #fdcb6e; color: #856404; }
+.cat-badge.cat-organic { background: #9b59b6; color: white; }
+.cat-badge.cat-weak { background: #b2bec3; color: white; }
+.gap-metrics { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.gap-metrics .m { background: rgba(255,255,255,0.7); padding: 8px 14px; border-radius: 8px; text-align: center; min-width: 80px; }
+.gap-metrics .m-num { display: block; font-size: 18px; font-weight: 700; color: #2d3436; }
+.gap-metrics .m-lbl { display: block; font-size: 11px; color: #636e72; margin-top: 2px; }
+.quotes-block { margin-top: 10px; }
+.quotes-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.quote { background: rgba(255,255,255,0.9); border-left: 3px solid #b2bec3; padding: 8px 12px; margin: 4px 0; font-size: 12.5px; color: #555; border-radius: 0 6px 6px 0; }
+.toc { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 24px; }
+.toc h3 { margin-bottom: 12px; font-size: 16px; }
+.toc a { display: inline-block; margin: 4px 8px 4px 0; padding: 4px 12px; background: white; border-radius: 14px; font-size: 13px; color: #0984e3; text-decoration: none; border: 1px solid #e1e4e8; }
+.toc a:hover { background: #0984e3; color: white; }
+@media (max-width: 768px) { .gap-metrics .m { flex: 1; min-width: 70px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>📊 华为 Pura X Max · 营销宣发 GAP 分析报告</h1>
+  <div class="subtitle">官方 messaging vs 用户感知 · 双轨对照框架</div>
+  <div class="meta">
+    分析时间：2026-05-26 19:09<br>
+    <span class="badge">官方轨：39 条</span>
+    <span class="badge">用户轨：902 条</span>
+    <span class="badge">对齐卖点：38 个</span>
+    <span class="badge">流水线：mgap fetch + mgap analyze</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h3>📑 报告导航</h3>
+  <a href="#data">① 数据采集</a>
+  <a href="#matrix">② GAP 矩阵</a>
+  <a href="#overturn">③ 翻车点</a>
+  <a href="#success">④ 渗透成功</a>
+  <a href="#fail">⑤ 渗透失败</a>
+  <a href="#organic">⑥ 用户自发心智</a>
+</div>
+
+<div class="section" id="data">
+  <h2>① 数据采集 <span class="small">真实双轨数据</span></h2>
+  <div class="metrics">
+    <div class="metric-card"><div class="num">39</div><div class="label">官方文案</div></div>
+    <div class="metric-card green"><div class="num">902</div><div class="label">用户评论</div></div>
+    <div class="metric-card purple"><div class="num">38</div><div class="label">对齐卖点</div></div>
+  </div>
+  <h3 style="margin-top:20px;font-size:15px;">官方轨来源</h3>
+  <div style="margin:8px 0;"><span class="badge badge-purple">华为商城产品页: 13</span> <span class="badge badge-purple">雷科技: 1</span> <span class="badge badge-purple">雷科技转引（疑似官方Slogan）: 1</span> <span class="badge badge-purple">B站KOL-大狸子切切里: 1</span> <span class="badge badge-purple">B站KOL-热男HotGuys: 1</span> <span class="badge badge-purple">B站KOL-钟文泽: 1</span> <span class="badge badge-purple">B站KOL-小白测评: 1</span> <span class="badge badge-purple">B站KOL-科技美学: 1</span> <span class="badge badge-purple">B站KOL-请不要叫我测评君: 1</span> <span class="badge badge-purple">B站KOL-微机分WekiHome: 1</span> <span class="badge badge-purple">B站KOL-我是HYK: 1</span> <span class="badge badge-purple">B站KOL-手机暴力测试: 1</span> <span class="badge badge-purple">B站KOL-来盒小饼干: 1</span> <span class="badge badge-purple">B站KOL-TP来啦: 1</span> <span class="badge badge-purple">B站KOL-Ted说: 1</span> <span class="badge badge-purple">B站KOL-寒窗先生: 1</span> <span class="badge badge-purple">B站KOL-李冬雪ALi: 1</span> <span class="badge badge-purple">B站KOL-灰客说: 1</span> <span class="badge badge-purple">B站KOL-西北无忌: 1</span> <span class="badge badge-purple">B站KOL-怀念阿飞: 1</span> <span class="badge badge-purple">小红书-华为终端官方账号: 1</span> <span class="badge badge-purple">网易科客: 1</span> <span class="badge badge-purple">快科技（微博头条）: 1</span> <span class="badge badge-purple">新浪微博数码博主（科技头条）: 1</span> <span class="badge badge-purple">B站华为终端官方号: 1</span> <span class="badge badge-purple">新华网: 1</span> <span class="badge badge-purple">IT之家: 1</span></div>
+  <h3 style="margin-top:16px;font-size:15px;">用户轨来源</h3>
+  <div style="margin:8px 0;"><span class="badge badge-blue">微博评论: 490</span> <span class="badge badge-blue">B站评论: 186</span> <span class="badge badge-blue">B站官方号评论: 150</span> <span class="badge badge-blue">小红书评论: 76</span></div>
+</div>
+
+<div class="section" id="matrix">
+  <h2>② GAP 矩阵总览 <span class="small">38 个卖点 · 按 4 类涂色</span></h2>
+  <table>
+    <thead>
+      <tr>
+        <th>卖点</th><th>官方加权</th><th>官方频次</th><th>用户提及</th><th>用户正/负</th><th>情感分</th><th>分类</th>
+      </tr>
+    </thead>
+    <tbody><tr class="cat-organic">
+          <td><strong>价格</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>217</td>
+          <td><span class="sent-pos">+19</span> / <span class="sent-neg">-89</span></td>
+          <td><span class="sent-neg">-0.32</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>品牌/华为</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>124</td>
+          <td><span class="sent-pos">+18</span> / <span class="sent-neg">-30</span></td>
+          <td><span class="sent-neutral">-0.10</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>对比苹果</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>85</td>
+          <td><span class="sent-pos">+9</span> / <span class="sent-neg">-23</span></td>
+          <td><span class="sent-neutral">-0.16</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>应用适配/生态</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>46</td>
+          <td><span class="sent-pos">+15</span> / <span class="sent-neg">-8</span></td>
+          <td><span class="sent-pos">+0.15</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>重量229g</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>40</td>
+          <td><span class="sent-pos">+3</span> / <span class="sent-neg">-14</span></td>
+          <td><span class="sent-neg">-0.28</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>对比三星</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>26</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-11</span></td>
+          <td><span class="sent-neg">-0.42</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>对比mate</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>20</td>
+          <td><span class="sent-pos">+3</span> / <span class="sent-neg">-3</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>外观设计</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>17</td>
+          <td><span class="sent-pos">+8</span> / <span class="sent-neg">-2</span></td>
+          <td><span class="sent-pos">+0.35</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>对比直板机</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>16</td>
+          <td><span class="sent-pos">+3</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-pos">+0.19</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>影像/拍照</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>12</td>
+          <td><span class="sent-pos">+7</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-pos">+0.58</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>电池续航</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>12</td>
+          <td><span class="sent-pos">+3</span> / <span class="sent-neg">-5</span></td>
+          <td><span class="sent-neutral">-0.17</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>社交价值/装x</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>10</td>
+          <td><span class="sent-pos">+2</span> / <span class="sent-neg">-4</span></td>
+          <td><span class="sent-neg">-0.20</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>游戏性能</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>9</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-2</span></td>
+          <td><span class="sent-neg">-0.22</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>屏幕素质</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>8</td>
+          <td><span class="sent-pos">+2</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-pos">+0.25</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>折痕</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>7</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>外屏宽度85mm</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>6</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-organic">
+          <td><strong>对比vivo</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>4</td>
+          <td><span class="sent-pos">+1</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-pos">+0.25</span></td>
+          <td>💡 用户自发</td>
+        </tr>
+        <tr class="cat-success">
+          <td><strong>大阔折叠形态</strong></td>
+          <td>32</td>
+          <td>13</td>
+          <td>89</td>
+          <td><span class="sent-pos">+17</span> / <span class="sent-neg">-14</span></td>
+          <td><span class="sent-neutral">+0.03</span></td>
+          <td>✅ 渗透成功</td>
+        </tr>
+        <tr class="cat-success">
+          <td><strong>麒麟9030Pro</strong></td>
+          <td>16</td>
+          <td>5</td>
+          <td>7</td>
+          <td><span class="sent-pos">+1</span> / <span class="sent-neg">-1</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>✅ 渗透成功</td>
+        </tr>
+        <tr class="cat-success">
+          <td><strong>大内屏7.7英寸</strong></td>
+          <td>13</td>
+          <td>4</td>
+          <td>9</td>
+          <td><span class="sent-pos">+1</span> / <span class="sent-neg">-1</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>✅ 渗透成功</td>
+        </tr>
+        <tr class="cat-success">
+          <td><strong>鸿蒙HarmonyOS6</strong></td>
+          <td>9</td>
+          <td>3</td>
+          <td>15</td>
+          <td><span class="sent-pos">+4</span> / <span class="sent-neg">-4</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>✅ 渗透成功</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>外屏5.4英寸</strong></td>
+          <td>20</td>
+          <td>6</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>小艺伴随式AI</strong></td>
+          <td>15</td>
+          <td>5</td>
+          <td>1</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>第二代红枫原色</strong></td>
+          <td>15</td>
+          <td>5</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>RYYB双滤光</strong></td>
+          <td>8</td>
+          <td>3</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>十档可变光圈</strong></td>
+          <td>6</td>
+          <td>2</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-fail">
+          <td><strong>天生会画</strong></td>
+          <td>6</td>
+          <td>2</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>⚠️ 渗透失败</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>120Hz LTPO屏</strong></td>
+          <td>4</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>M-Pen手写笔</strong></td>
+          <td>4</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>第二代昆仑玻璃</strong></td>
+          <td>4</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>超光变主摄</strong></td>
+          <td>4</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>eSIM支持</strong></td>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>潜望长焦</strong></td>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>单手操作</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>3</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>厚度</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>3</td>
+          <td><span class="sent-pos">+2</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-pos">+0.67</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>100W快充</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>内外屏流转</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        <tr class="cat-weak">
+          <td><strong>折叠耐久</strong></td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td><span class="sent-pos">+0</span> / <span class="sent-neg">-0</span></td>
+          <td><span class="sent-neutral">+0.00</span></td>
+          <td>— 信号弱</td>
+        </tr>
+        </tbody>
+  </table>
+</div>
+
+<div class="section" id="overturn">
+  <h2>🚨 ③ 翻车 <span class="small">0 个</span></h2>
+  <p style="color:#999">本轮无翻车点。</p>
+</div>
+
+<div class="section" id="success">
+  <h2>✅ ④ 渗透成功 <span class="small">4 个</span></h2>
+  
+    <div class="gap-card cat-success">
+      <div class="gap-card-head">
+        <h3>大阔折叠形态</h3>
+        <span class="cat-badge cat-success">✅ 渗透成功</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">32</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">13</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">89</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+17</span>/<span class="sent-neg">-14</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.03</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"阔折叠最重要的就是适配，苹果能号令开发者，华为能自己适配，剩下的安卓能干嘛？等比例拉伸？"</div><div class="quote">"全部重新设计开模的产品，物料涨那么猛，安卓现阶段拿出来就纯赔本卖吆喝，哪怕是华子想赚到钱估计也要等到出货七八十万台后，但凡换个mate开头的名字，说他对标X7都挑不出毛病，华子这定价直接把国内其他大折…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"你怕是没有用过苹果的iPad平板吧，上面有很多很难用的软件，画面比例奇怪，显示拉伸放大，甚至手机比例，这都多少年了，我也没见苹果把那些软件适配好啊，就别那里吹苹果了，也没比安卓适配好到哪里去，我倒是希…"</div><div class="quote">"朱老师的评测很客观。家里人买了使用了近1个月，我有时也好奇拿过来玩两下，总的感觉展开后这个小胖子的屏幕大小和比例还是很不错的，它的使用感觉就像一个小平板，满屏状态看视频看书跟直板手机完全是两种感觉，更…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-success">
+      <div class="gap-card-head">
+        <h3>麒麟9030Pro</h3>
+        <span class="cat-badge cat-success">✅ 渗透成功</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">16</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">5</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">7</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+1</span>/<span class="sent-neg">-1</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"苹果贵我能理解，主要其他品牌更贵的理由是什么？内存和处理器成本上升吗？还是有什么独家科技？类似于oppo的无痕科技？"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"荣耀不知道会不会出，荣耀出的话配置应该不错吧，处理器应该顶级"</div></div>
+    </div>
+    
+    <div class="gap-card cat-success">
+      <div class="gap-card-head">
+        <h3>大内屏7.7英寸</h3>
+        <span class="cat-badge cat-success">✅ 渗透成功</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">13</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">4</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">9</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+1</span>/<span class="sent-neg">-1</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。 鸿蒙生态还是任重道远。"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"朱老师的评测很客观。家里人买了使用了近1个月，我有时也好奇拿过来玩两下，总的感觉展开后这个小胖子的屏幕大小和比例还是很不错的，它的使用感觉就像一个小平板，满屏状态看视频看书跟直板手机完全是两种感觉，更…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-success">
+      <div class="gap-card-head">
+        <h3>鸿蒙HarmonyOS6</h3>
+        <span class="cat-badge cat-success">✅ 渗透成功</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">9</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">3</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">15</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+4</span>/<span class="sent-neg">-4</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。 鸿蒙生态还是任重道远。"</div><div class="quote">"一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"鸿蒙系统现在能下载和运行的app有好起来么？"</div><div class="quote">"鸿蒙不好用是一定的，但这个系统也的确需要大量的用户作为基数提供经验值来提升。 所以目前每一个用鸿蒙的人，都是在帮华为做系统支撑和数据来源。"</div></div>
+    </div>
+    
+</div>
+
+<div class="section" id="fail">
+  <h2>⚠️ ⑤ 渗透失败 <span class="small">6 个</span></h2>
+  
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>外屏5.4英寸</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">20</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">6</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>小艺伴随式AI</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">15</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">5</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">1</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>第二代红枫原色</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">15</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">5</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>RYYB双滤光</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">8</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">3</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>十档可变光圈</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">6</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">2</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-fail">
+      <div class="gap-card-head">
+        <h3>天生会画</h3>
+        <span class="cat-badge cat-fail">⚠️ 渗透失败</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">6</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">2</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+</div>
+
+<div class="section" id="organic">
+  <h2>💡 ⑥ 用户自发心智 <span class="small">17 个</span></h2>
+  
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>价格</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">217</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+19</span>/<span class="sent-neg">-89</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neg">-0.32</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"不值得，太贵了"</div><div class="quote">"线下体验了一下，非常精致，一种全新的体验，不过太贵了，两年后闲鱼见吧"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"有钱喜欢就买！没有值不值的问题"</div><div class="quote">"搞什么新系统，vivo能不能也出一款同尺寸的手机，系统就用vivo的系统，稳定，价格5500"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>品牌/华为</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">124</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+18</span>/<span class="sent-neg">-30</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">-0.10</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生…"</div><div class="quote">"按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"谢谢超帅气的华为Pura 全球代言人易烊千玺，手机很好用，拍照功能特别强大，拍出的花朵好看"</div><div class="quote">"鸿蒙不好用是一定的，但这个系统也的确需要大量的用户作为基数提供经验值来提升。 所以目前每一个用鸿蒙的人，都是在帮华为做系统支撑和数据来源。"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>对比苹果</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">85</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+9</span>/<span class="sent-neg">-23</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">-0.16</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"那确实是，苹果出的话指定贵！"</div><div class="quote">"按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"如果苹果能出个同尺寸折叠屏就完美了"</div><div class="quote">"真牛，我在iPhone 17pro和pura X之间犹豫了好久，如果早一点看到你的这个视频，我一定会买pura x"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>应用适配/生态</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">46</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+15</span>/<span class="sent-neg">-8</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.15</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生…"</div><div class="quote">"按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"鸿蒙系统现在能下载和运行的app有好起来么？"</div><div class="quote">"这解释了我为啥莫名地喜欢这个小胖丁，原来我是颜控，它长在了我的审美点上然后又接受不了APP不好用的缺点，所以一直还没买"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>重量229g</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">40</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+3</span>/<span class="sent-neg">-14</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neg">-0.28</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"这个手机耗电怎么样，重度使用能保持一天一充吗？"</div><div class="quote">"希望多出一点不是很大的手机，手机也不要太重 女生用方便的"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"好用，爱用"</div><div class="quote">"朱老师的评测很客观。家里人买了使用了近1个月，我有时也好奇拿过来玩两下，总的感觉展开后这个小胖子的屏幕大小和比例还是很不错的，它的使用感觉就像一个小平板，满屏状态看视频看书跟直板手机完全是两种感觉，更…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>对比三星</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">26</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-11</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neg">-0.42</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"除了苹果三星，谁还敢比华为贵？"</div><div class="quote">"苹果——价格不管卖多少，卖的都不会差！三星——价格不管卖多少，肯定卖的不会很好！国产第二家——价格不管卖多少，纯属打酱油的，销量铁定拉胯！"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>对比mate</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">20</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+3</span>/<span class="sent-neg">-3</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"比matex7便宜几千，很可以了，两个用料都差不多"</div><div class="quote">"首发买的蓝色，价格不算贵，爽是真的爽。把我mate 80 rs扔一边吃灰了，"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"东西很好，可惜我买不起智能，只能用用mate80了。"</div><div class="quote">"mate80性价比突然好起来了，看不起p90标准版的话完全可以不出"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>外观设计</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">17</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+8</span>/<span class="sent-neg">-2</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.35</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"全部重新设计开模的产品，物料涨那么猛，安卓现阶段拿出来就纯赔本卖吆喝，哪怕是华子想赚到钱估计也要等到出货七八十万台后，但凡换个mate开头的名字，说他对标X7都挑不出毛病，华子这定价直接把国内其他大折…"</div><div class="quote">"按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有…"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"但是他拍照也是真的好看"</div><div class="quote">"好好看 能买的起手机壳 买不起手机怎么办"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>对比直板机</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">16</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+3</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.19</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"想问问华为阔折叠和oppo n6怎么选，好纠结，一直用的直板机想换换口味，用不用等果折"</div><div class="quote">"朱老师的评测很客观。家里人买了使用了近1个月，我有时也好奇拿过来玩两下，总的感觉展开后这个小胖子的屏幕大小和比例还是很不错的，它的使用感觉就像一个小平板，满屏状态看视频看书跟直板手机完全是两种感觉，更…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>影像/拍照</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">12</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+7</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.58</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"但是他拍照也是真的好看"</div><div class="quote">"这功能不错，以后男生给女生拍照可以少挨骂了"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>电池续航</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">12</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+3</span>/<span class="sent-neg">-5</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">-0.17</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"这个手机耗电怎么样，重度使用能保持一天一充吗？"</div><div class="quote">"续航怎么样折叠机我就怕续航不行"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"宝宝想问问恋与深空清晰度怎么样呀，续航还好吗"</div><div class="quote">"念电池这个经的建议去看看野生测评那个Pura90pm户外一天，最小的电池就是相对同类（ovm）最耐用综合日用表现最好"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>社交价值/装x</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">10</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+2</span>/<span class="sent-neg">-4</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neg">-0.20</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"真的贵，唯二高端"</div><div class="quote">"都那么贵了，直接买华为，有牌子响亮有面子，高端名词，其他家就看果折来，其他折叠就是来当炮灰"</div></div><div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"果子是很牛逼，但是它的定价要是过高，百分百也没有多大的市场。"</div><div class="quote">"卧槽，我猜的8499或者8999，这直接干到10999了，华为牛逼，加油华为"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>游戏性能</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">9</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-2</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neg">-0.22</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-neg">⚠️ 用户负向声音</div><div class="quote">"我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。 鸿蒙生态还是任重道远。"</div><div class="quote">"一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>屏幕素质</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">8</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+2</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.25</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"你怕是没有用过苹果的iPad平板吧，上面有很多很难用的软件，画面比例奇怪，显示拉伸放大，甚至手机比例，这都多少年了，我也没见苹果把那些软件适配好啊，就别那里吹苹果了，也没比安卓适配好到哪里去，我倒是希…"</div><div class="quote">"朱老师的评测很客观。家里人买了使用了近1个月，我有时也好奇拿过来玩两下，总的感觉展开后这个小胖子的屏幕大小和比例还是很不错的，它的使用感觉就像一个小平板，满屏状态看视频看书跟直板手机完全是两种感觉，更…"</div></div>
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>折痕</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">7</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>外屏宽度85mm</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">6</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-neutral">+0.00</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      
+    </div>
+    
+    <div class="gap-card cat-organic">
+      <div class="gap-card-head">
+        <h3>对比vivo</h3>
+        <span class="cat-badge cat-organic">💡 用户自发</span>
+      </div>
+      <div class="gap-metrics">
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方加权</span></div>
+        <div class="m"><span class="m-num">0</span><span class="m-lbl">官方频次</span></div>
+        <div class="m"><span class="m-num">4</span><span class="m-lbl">用户提及</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+1</span>/<span class="sent-neg">-0</span></span><span class="m-lbl">正/负</span></div>
+        <div class="m"><span class="m-num"><span class="sent-pos">+0.25</span></span><span class="m-lbl">情感分</span></div>
+      </div>
+      <div class="quotes-block"><div class="quotes-label sent-pos">👍 用户正向声音</div><div class="quote">"搞什么新系统，vivo能不能也出一款同尺寸的手机，系统就用vivo的系统，稳定，价格5500"</div></div>
+    </div>
+    
+</div>
+
+<div class="section" style="text-align:center;color:#636e72;font-size:13px;">
+  <p>📊 数据流水线：<strong>mgap fetch</strong> (crawlers) → <strong>mgap analyze</strong> (extract + matrix + render)</p>
+  <p style="margin-top:8px;">generated by <strong>marketing-gap-analyzer</strong> · all data verifiable</p>
+</div>
+
+</div>
+</body>
+</html>

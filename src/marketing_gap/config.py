@@ -123,6 +123,19 @@ class Config:
         return self._raw.get("project", {}).get("description", "")
 
     @property
+    def category_description(self) -> str:
+        """Product category / positioning description (e.g. '大阔折叠屏旗舰')."""
+        return self._raw.get("project", {}).get("category", "")
+
+    @property
+    def min_comment_length(self) -> int:
+        return int(self._raw.get("extractors", {}).get("user", {}).get("min_comment_length", 5))
+
+    @property
+    def max_comment_length(self) -> int:
+        return int(self._raw.get("extractors", {}).get("user", {}).get("max_comment_length", 500))
+
+    @property
     def data_date(self) -> str:
         return self._raw.get("project", {}).get("data_date", "")
 

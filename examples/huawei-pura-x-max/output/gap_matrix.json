@@ -3,15 +3,15 @@
     "selling_point": "价格",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 232,
-    "user_positive": 21,
-    "user_negative": 95,
+    "user_total_mentions": 217,
+    "user_positive": 19,
+    "user_negative": 89,
     "sentiment_score": -0.32,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
-      "多贵？",
-      "不值得，太贵了"
+      "不值得，太贵了",
+      "线下体验了一下，非常精致，一种全新的体验，不过太贵了，两年后闲鱼见吧"
     ],
     "user_positive_examples": [
       "搞什么新系统，vivo能不能也出一款同尺寸的手机，系统就用vivo的系统，稳定，价格5500",
@@ -22,15 +22,15 @@
     "selling_point": "品牌/华为",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 138,
-    "user_positive": 21,
-    "user_negative": 34,
-    "sentiment_score": -0.09,
+    "user_total_mentions": 124,
+    "user_positive": 18,
+    "user_negative": 30,
+    "sentiment_score": -0.1,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉",
-      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。"
+      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。",
+      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大"
     ],
     "user_positive_examples": [
       "鸿蒙不好用是一定的，但这个系统也的确需要大量的用户作为基数提供经验值来提升。 所以目前每一个用鸿蒙的人，都是在帮华为做系统支撑和数据来源。",
@@ -41,15 +41,15 @@
     "selling_point": "对比苹果",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 93,
-    "user_positive": 11,
-    "user_negative": 24,
-    "sentiment_score": -0.14,
+    "user_total_mentions": 85,
+    "user_positive": 9,
+    "user_negative": 23,
+    "sentiment_score": -0.16,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
       "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。",
-      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。"
+      "那确实是，苹果出的话指定贵！"
     ],
     "user_positive_examples": [
       "如果苹果能出个同尺寸折叠屏就完美了",
@@ -60,15 +60,15 @@
     "selling_point": "应用适配/生态",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 57,
-    "user_positive": 20,
-    "user_negative": 12,
-    "sentiment_score": 0.14,
+    "user_total_mentions": 46,
+    "user_positive": 15,
+    "user_negative": 8,
+    "sentiment_score": 0.15,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉",
-      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。"
+      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。",
+      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大"
     ],
     "user_positive_examples": [
       "鸿蒙系统现在能下载和运行的app有好起来么？",
@@ -79,10 +79,10 @@
     "selling_point": "重量229g",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 56,
+    "user_total_mentions": 40,
     "user_positive": 3,
-    "user_negative": 17,
-    "sentiment_score": -0.25,
+    "user_negative": 14,
+    "sentiment_score": -0.28,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
@@ -114,15 +114,15 @@
     "selling_point": "对比mate",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 23,
+    "user_total_mentions": 20,
     "user_positive": 3,
-    "user_negative": 4,
-    "sentiment_score": -0.04,
+    "user_negative": 3,
+    "sentiment_score": 0.0,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
       "首发买的蓝色，价格不算贵，爽是真的爽。把我mate 80 rs扔一边吃灰了，",
-      "首发买的蓝色，价格不算贵，爽是真的爽。把我mate 80 rs扔一边吃灰了，"
+      "比matex7便宜几千，很可以了，两个用料都差不多"
     ],
     "user_positive_examples": [
       "东西很好，可惜我买不起智能，只能用用mate80了。",
@@ -133,15 +133,15 @@
     "selling_point": "外观设计",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 20,
+    "user_total_mentions": 17,
     "user_positive": 8,
-    "user_negative": 3,
-    "sentiment_score": 0.25,
+    "user_negative": 2,
+    "sentiment_score": 0.35,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
       "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。",
-      "按照评论区的意思是苹果线被曝出来了外观设计，然后到现在都还没有产品发售，苹果到现在自己都没有宣传的情况下，华为就已经发售了。那我只能说两家公司的差距确实挺大的，苹果现在水平确实比较一般，到现在都还没有做出来。\n关于适配问题，我已经替他们想好了，等苹果折叠机一出来，APP厂商刚好适配完，然后功劳全成苹果的了。人家只会为了苹果适配，才不是为了你华为去适配。"
+      "全部重新设计开模的产品，物料涨那么猛，安卓现阶段拿出来就纯赔本卖吆喝，哪怕是华子想赚到钱估计也要等到出货七八十万台后，但凡换个mate开头的名字，说他对标X7都挑不出毛病，华子这定价直接把国内其他大折叠，阔折叠打的死死的，你比我卖的贵就卖不出去，你比我卖的便宜，做好150万台出货量"
     ],
     "user_positive_examples": [
       "但是他拍照也是真的好看",
@@ -149,32 +149,13 @@
     ]
   },
   {
-    "selling_point": "电池续航",
-    "official_weighted_score": 0,
-    "official_raw_count": 0,
-    "user_total_mentions": 19,
-    "user_positive": 5,
-    "user_negative": 9,
-    "sentiment_score": -0.21,
-    "penetration_ratio": null,
-    "category": "④ 用户自发心智",
-    "user_negative_examples": [
-      "续航怎么样[失望R]折叠机我就怕续航不行[哭惹R]",
-      "这个手机耗电怎么样，重度使用能保持一天一充吗？"
-    ],
-    "user_positive_examples": [
-      "宝宝想问问恋与深空清晰度怎么样呀，续航还好吗",
-      "念电池这个经的建议去看看野生测评那个Pura90pm户外一天，最小的电池就是相对同类（ovm）最耐用综合日用表现最好"
-    ]
-  },
-  {
     "selling_point": "对比直板机",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 17,
+    "user_total_mentions": 16,
     "user_positive": 3,
     "user_negative": 0,
-    "sentiment_score": 0.18,
+    "sentiment_score": 0.19,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [],
@@ -187,45 +168,45 @@
     "selling_point": "影像/拍照",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 14,
+    "user_total_mentions": 12,
     "user_positive": 7,
-    "user_negative": 2,
-    "sentiment_score": 0.36,
+    "user_negative": 0,
+    "sentiment_score": 0.58,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
-    "user_negative_examples": [
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉",
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉"
-    ],
+    "user_negative_examples": [],
     "user_positive_examples": [
       "这功能不错，以后男生给女生拍照可以少挨骂了",
       "但是他拍照也是真的好看"
     ]
   },
   {
-    "selling_point": "游戏性能",
+    "selling_point": "电池续航",
     "official_weighted_score": 0,
     "official_raw_count": 0,
     "user_total_mentions": 12,
-    "user_positive": 0,
-    "user_negative": 3,
-    "sentiment_score": -0.25,
+    "user_positive": 3,
+    "user_negative": 5,
+    "sentiment_score": -0.17,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
-      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大",
-      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大"
+      "续航怎么样[失望R]折叠机我就怕续航不行[哭惹R]",
+      "这个手机耗电怎么样，重度使用能保持一天一充吗？"
     ],
-    "user_positive_examples": []
+    "user_positive_examples": [
+      "宝宝想问问恋与深空清晰度怎么样呀，续航还好吗",
+      "念电池这个经的建议去看看野生测评那个Pura90pm户外一天，最小的电池就是相对同类（ovm）最耐用综合日用表现最好"
+    ]
   },
   {
     "selling_point": "社交价值/装x",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 11,
+    "user_total_mentions": 10,
     "user_positive": 2,
     "user_negative": 4,
-    "sentiment_score": -0.18,
+    "sentiment_score": -0.2,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [
@@ -238,13 +219,29 @@
     ]
   },
   {
+    "selling_point": "游戏性能",
+    "official_weighted_score": 0,
+    "official_raw_count": 0,
+    "user_total_mentions": 9,
+    "user_positive": 0,
+    "user_negative": 2,
+    "sentiment_score": -0.22,
+    "penetration_ratio": null,
+    "category": "④ 用户自发心智",
+    "user_negative_examples": [
+      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大",
+      "我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。\n鸿蒙生态还是任重道远。"
+    ],
+    "user_positive_examples": []
+  },
+  {
     "selling_point": "屏幕素质",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 10,
-    "user_positive": 3,
+    "user_total_mentions": 8,
+    "user_positive": 2,
     "user_negative": 0,
-    "sentiment_score": 0.3,
+    "sentiment_score": 0.25,
     "penetration_ratio": null,
     "category": "④ 用户自发心智",
     "user_negative_examples": [],
@@ -257,22 +254,6 @@
     "selling_point": "折痕",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 9,
-    "user_positive": 0,
-    "user_negative": 2,
-    "sentiment_score": -0.22,
-    "penetration_ratio": null,
-    "category": "④ 用户自发心智",
-    "user_negative_examples": [
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉",
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉"
-    ],
-    "user_positive_examples": []
-  },
-  {
-    "selling_point": "外屏宽度85mm",
-    "official_weighted_score": 0,
-    "official_raw_count": 0,
     "user_total_mentions": 7,
     "user_positive": 0,
     "user_negative": 0,
@@ -283,10 +264,10 @@
     "user_positive_examples": []
   },
   {
-    "selling_point": "单手操作",
+    "selling_point": "外屏宽度85mm",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 4,
+    "user_total_mentions": 6,
     "user_positive": 0,
     "user_negative": 0,
     "sentiment_score": 0.0,
@@ -314,11 +295,11 @@
     "selling_point": "大阔折叠形态",
     "official_weighted_score": 32,
     "official_raw_count": 13,
-    "user_total_mentions": 96,
-    "user_positive": 18,
+    "user_total_mentions": 89,
+    "user_positive": 17,
     "user_negative": 14,
-    "sentiment_score": 0.04,
-    "penetration_ratio": 3.0,
+    "sentiment_score": 0.03,
+    "penetration_ratio": 2.78,
     "category": "① 渗透成功(中性)",
     "user_negative_examples": [
       "阔折叠最重要的就是适配，苹果能号令开发者，华为能自己适配，剩下的安卓能干嘛？等比例拉伸？",
@@ -333,11 +314,11 @@
     "selling_point": "麒麟9030Pro",
     "official_weighted_score": 16,
     "official_raw_count": 5,
-    "user_total_mentions": 8,
+    "user_total_mentions": 7,
     "user_positive": 1,
     "user_negative": 1,
     "sentiment_score": 0.0,
-    "penetration_ratio": 0.5,
+    "penetration_ratio": 0.44,
     "category": "① 渗透成功(中性)",
     "user_negative_examples": [
       "苹果贵我能理解，主要其他品牌更贵的理由是什么？内存和处理器成本上升吗？还是有什么独家科技？类似于oppo的无痕科技？"
@@ -350,11 +331,11 @@
     "selling_point": "大内屏7.7英寸",
     "official_weighted_score": 13,
     "official_raw_count": 4,
-    "user_total_mentions": 11,
+    "user_total_mentions": 9,
     "user_positive": 1,
     "user_negative": 1,
     "sentiment_score": 0.0,
-    "penetration_ratio": 0.85,
+    "penetration_ratio": 0.69,
     "category": "① 渗透成功(中性)",
     "user_negative_examples": [
       "我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。\n鸿蒙生态还是任重道远。"
@@ -367,15 +348,15 @@
     "selling_point": "鸿蒙HarmonyOS6",
     "official_weighted_score": 9,
     "official_raw_count": 3,
-    "user_total_mentions": 17,
-    "user_positive": 5,
-    "user_negative": 5,
+    "user_total_mentions": 15,
+    "user_positive": 4,
+    "user_negative": 4,
     "sentiment_score": 0.0,
-    "penetration_ratio": 1.89,
+    "penetration_ratio": 1.67,
     "category": "① 渗透成功(中性)",
     "user_negative_examples": [
       "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大",
-      "[吃瓜]一天两充要不游戏玩大半天，要不长期使用卓易通下的软件or模拟器啥的，影响性能并且耗电厉害，不然纯鸿蒙软件中度使用六七个小时不是问题，WLAN情况下八个多小时吧，当然每个人使用习惯不一样，严重依赖安卓生态的人还是不建议买华为，使用体验差\n至于b站那就是适配不行\n而游戏，折叠屏玩游戏没见过哪款是愉快的，但这机玩起来问题不大"
+      "我首发用到现在的体验，总结一下就是割裂，爽的地方非常爽，比如看视频看书玩游戏看表格，不爽的地方非常不爽，比如各种应用的功能缺失。\n鸿蒙生态还是任重道远。"
     ],
     "user_positive_examples": [
       "鸿蒙不好用是一定的，但这个系统也的确需要大量的用户作为基数提供经验值来提升。 所以目前每一个用鸿蒙的人，都是在帮华为做系统支撑和数据来源。",
@@ -399,11 +380,11 @@
     "selling_point": "小艺伴随式AI",
     "official_weighted_score": 15,
     "official_raw_count": 5,
-    "user_total_mentions": 2,
+    "user_total_mentions": 1,
     "user_positive": 0,
     "user_negative": 0,
     "sentiment_score": 0.0,
-    "penetration_ratio": 0.13,
+    "penetration_ratio": 0.07,
     "category": "② 渗透失败",
     "user_negative_examples": [],
     "user_positive_examples": []
@@ -539,6 +520,19 @@
     "user_positive_examples": []
   },
   {
+    "selling_point": "单手操作",
+    "official_weighted_score": 0,
+    "official_raw_count": 0,
+    "user_total_mentions": 3,
+    "user_positive": 0,
+    "user_negative": 0,
+    "sentiment_score": 0.0,
+    "penetration_ratio": null,
+    "category": "—（信号弱）",
+    "user_negative_examples": [],
+    "user_positive_examples": []
+  },
+  {
     "selling_point": "厚度",
     "official_weighted_score": 0,
     "official_raw_count": 0,
@@ -555,26 +549,10 @@
     ]
   },
   {
-    "selling_point": "折叠耐久",
-    "official_weighted_score": 0,
-    "official_raw_count": 0,
-    "user_total_mentions": 3,
-    "user_positive": 0,
-    "user_negative": 2,
-    "sentiment_score": -0.67,
-    "penetration_ratio": null,
-    "category": "—（信号弱）",
-    "user_negative_examples": [
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉",
-      "看完了，省流[doge]\n华为折叠续航最拉\n华为折叠续航最长\n华为折叠折痕最大\n华为折叠折痕最小\n华为折叠价格最贵\n华为折叠性价比最高\n华为折叠适配最好\n华为折叠适配最拉\n华为折叠怎么折都有面\n华为折叠少一个面\n华为折叠握持手感最好\n华为折叠握持手感最差\n华为折叠性能最好\n华为折叠性能最拉\n华为折叠铰链最好\n华为折叠铰链最差\n华为折叠影像最好\n华为折叠影像最拉"
-    ],
-    "user_positive_examples": []
-  },
-  {
     "selling_point": "100W快充",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 2,
+    "user_total_mentions": 1,
     "user_positive": 0,
     "user_negative": 0,
     "sentiment_score": 0.0,
@@ -587,7 +565,20 @@
     "selling_point": "内外屏流转",
     "official_weighted_score": 0,
     "official_raw_count": 0,
-    "user_total_mentions": 2,
+    "user_total_mentions": 1,
+    "user_positive": 0,
+    "user_negative": 0,
+    "sentiment_score": 0.0,
+    "penetration_ratio": null,
+    "category": "—（信号弱）",
+    "user_negative_examples": [],
+    "user_positive_examples": []
+  },
+  {
+    "selling_point": "折叠耐久",
+    "official_weighted_score": 0,
+    "official_raw_count": 0,
+    "user_total_mentions": 1,
     "user_positive": 0,
     "user_negative": 0,
     "sentiment_score": 0.0,

@@ -1,8 +1,9 @@
 # marketing-gap-analyzer
 
-> Compare what competitors say vs. what users actually talk about.
-> Identify which selling points penetrate, which backfire, and which reflect
-> genuine user needs.
+> **End-to-end competitor marketing GAP analysis tool.**  
+> Fetch raw user comments from Weibo/Bilibili/Xiaohongshu, extract what
+> competitors push officially, cross-reference the two, and produce a
+> Feishu-ready Markdown (or HTML) report — all from a single CLI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](pyproject.toml)
@@ -15,9 +16,9 @@ Product Marketing Managers spend weeks combing through competitor press releases
 KOL reviews, and social comments to figure out **what their next product
 messaging should be**.
 
-This tool automates the core analysis: cross-reference competitor official
-selling points against real user discussions from social platforms, and classify
-every selling point into 4 actionable categories.
+This tool automates the full pipeline: data collection → official selling-point
+extraction → user voice + sentiment analysis → GAP matrix classification →
+rendered report.
 
 ---
 
@@ -43,15 +44,36 @@ every selling point into 4 actionable categories.
 
 ```bash
 pip install -e .
-# or
-pip install -r requirements.txt
+# pip install -r requirements.txt  (if you have one)
 ```
 
-### 2. Prepare Data
+Optional — for Bilibili / Xiaohongshu crawling:
 
-Two JSON files are required.
+```bash
+git clone https://github.com/NanmiCoder/MediaCrawler
+cd MediaCrawler && pip install -r requirements.txt && playwright install chromium
+export MEDIACRAWLER_HOME=/path/to/MediaCrawler
+```
 
-**`data/raw_official.json`** — competitor's official marketing copy:
+### 2. Set up API key (recommended)
+
+```bash
+cp .env.example .env
+# Edit .env with your DeepSeek/OpenAI key
+# Without an LLM key, the tool falls back to dictionary matching (demo only).
+```
+
+### 3. Fetch user comments
+
+```bash
+# Weibo: prepare a cookie file first (see docs/data-collection.md)
+echo "https://weibo.com/7928198622/QBGttc1BD" > urls.txt
+mgap fetch weibo --urls urls.txt --cookie weibo_cookie.json -o data/raw_user.json
+```
+
+### 4. Prepare official marketing copy
+
+Create `data/raw_official.json` with your competitor's official copy:
 ```json
 [
   {
@@ -64,46 +86,23 @@ Two JSON files are required.
 ]
 ```
 
-**`data/raw_user.json`** — user comments from social platforms:
-```json
-[
-  {
-    "source": "微博评论",
-    "post_id": "5103030394562112",
-    "note_id": "数码闲聊站",
-    "content": "这价格也太贵了..."
-  }
-]
-```
+### 5. Configure and run
 
-### 3. Configure
-
-Copy [`config/default.yaml`](config/default.yaml) to your project and customize.
-At minimum, set the project name, brand, and selling-point dictionaries.
-
-### 4. (Optional) Set LLM Key
-
-```bash
-cp .env.example .env
-# Edit .env with your DeepSeek/OpenAI key
-```
-
-Without an LLM key, the tool falls back to dictionary keyword matching.
-
-### 5. Run
+Copy [`config/default.yaml`](config/default.yaml) to `config.yaml`, set the
+project name / brand, and provide selling-point dictionaries (required for
+rule-based fallback).
 
 ```bash
 mgap -c config.yaml analyze
 ```
 
-This runs the full 4-step pipeline:
+This runs: `extract-official → extract-user → gap-matrix → render`.
 
-1. Extract official selling points
-2. Extract user voice (mentions + sentiment)
-3. Build GAP matrix (cross-reference & classify)
-4. Render Feishu Markdown report
-
-Output goes to your configured `outputs/` directory.
+Output goes to your `paths.outputs` directory (default `output/`):
+- `official_selling_points.json`
+- `user_voice.json`
+- `gap_matrix.json`
+- `report.md` (Feishu-ready Markdown)
 
 ---
 
@@ -113,16 +112,21 @@ Output goes to your configured `outputs/` directory.
 mgap [-c CONFIG] [COMMAND] [-o OUTPUT]
 
 Commands:
-  analyze            Run full pipeline (default)
-  extract-official   Step 1 only — official selling points
-  extract-user       Step 2 only — user voice
-  gap-matrix         Step 3 only — classification matrix
-  render             Step 4 only — Feishu Markdown report
+  analyze                     Run full pipeline (default)
+  extract-official            Step 1 — official selling points
+  extract-user                Step 2 — user voice
+  gap-matrix                  Step 3 — classification matrix
+  render                      Step 4 — report (--format feishu|html|both)
+
+  fetch weibo                 Collect Weibo first-level comments
+  fetch bilibili              Search + collect Bilibili comments
+  fetch xiaohongshu           Search + collect Xiaohongshu comments
 
 Examples:
-  mgap                                    # uses ./config.yaml, runs analyze
-  mgap -c examples/foo/config.yaml
-  mgap -c config.yaml extract-user -o out/voice.json
+  mgap                                                # uses ./config.yaml
+  mgap -c examples/huawei-pura-x-max/config.yaml analyze
+  mgap -c config.yaml render --format both            # MD + HTML
+  mgap fetch weibo --urls urls.txt --cookie cookie.json -o data/raw_user.json
 ```
 
 ---
@@ -135,24 +139,18 @@ complete walkthrough with real data (962 user comments, 39 official documents,
 
 ---
 
-## Data Collection
+## Limitations
 
-The pipeline is data-source-agnostic — it works with any platform as long as
-you provide the JSON files. For Chinese social media we recommend:
-
-- **Weibo**: [1dyer/weibo-comment-crawler](https://github.com/1dyer/weibo-comment-crawler)
-- **Bilibili / Xiaohongshu**: [MediaCrawler](https://github.com/NanmiCoder/MediaCrawler)
-
----
-
-## Customization
-
-See [docs/customization.md](docs/customization.md) for detailed guides on:
-
-- Adapting to a new product category
-- Adjusting thresholds for your data volume
-- Adding new source platforms
-- Writing a custom renderer
+- **WeChat public-account comments**: not collected (no public API; requires
+  PC WeChat + Fiddler/mitmproxy capture).
+- **Weibo keyword search**: requires a SUBP cookie that expires quickly.
+  Current workflow uses manually selected KOL post URLs.
+- **Xiaohongshu detail mode**: requires fresh `xsec_token` values (~2-hour
+  lifetime). QR re-login needed.
+- **LLM fallback**: without `DEEPSEEK_API_KEY`, extraction degrades to
+  hardcoded dictionary matching. **Do not present output as a real analysis**
+  without LLM — the dictionary has no product-specific aliases until you
+  configure them.
 
 ---
 
@@ -161,6 +159,8 @@ See [docs/customization.md](docs/customization.md) for detailed guides on:
 - [`docs/methodology.md`](docs/methodology.md) — GAP framework explanation
 - [`docs/architecture.md`](docs/architecture.md) — Module structure & data flow
 - [`docs/customization.md`](docs/customization.md) — Customization guide
+- [`docs/data-collection.md`](docs/data-collection.md) — Cookie setup, rate limits,
+  MediaCrawler integration
 
 ---
 

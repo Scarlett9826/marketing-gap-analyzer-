@@ -37,14 +37,17 @@ def test_auto_summary_uses_brand() -> None:
     item = {
         "selling_point": "价格",
         "official_weighted_score": 2,
+        "official_raw_count": 1,
         "user_total_mentions": 5,
+        "user_positive": 0,
+        "user_negative": 3,
         "sentiment_score": -0.5,
         "category": "④ 用户自发心智",
     }
     s = auto_summary(item, brand="Apple")
     assert "Apple" in s
     assert "价格" in s
-    assert "5 次" in s
+    assert "5 条" in s
 
 
 def test_pick_evidence_uses_aliases() -> None:

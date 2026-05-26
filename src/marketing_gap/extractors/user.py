@@ -15,6 +15,7 @@ from typing import Any
 
 from ..config import Config
 from ..utils.llm import chat_json
+from ..utils.text import is_low_signal, is_template_rant, normalize_for_dedup
 
 
 # NOTE: literal braces in JSON example are escaped ({{ }}) for str.format()
@@ -112,18 +113,30 @@ def extract_user(
         lambda: {"positive": [], "neutral": [], "negative": []}
     )
 
+    min_len = cfg.min_comment_length
+    max_len = cfg.max_comment_length
+    seen_texts: set[str] = set()
+
     for i, c in enumerate(comments, 1):
         if i % 50 == 0:
             print(f"  Progress {i}/{len(comments)}")
-        extracted = llm_extract(
-            c.get("content", ""), cfg, dict_map, positive_words, negative_words
-        )
+        content = c.get("content", "")
+        if is_low_signal(content) or is_template_rant(content):
+            continue
+        content_len = len(content.strip())
+        if content_len < min_len or content_len > max_len:
+            continue
+        dedup_key = normalize_for_dedup(content)
+        if dedup_key in seen_texts:
+            continue
+        seen_texts.add(dedup_key)
+        extracted = llm_extract(content, cfg, dict_map, positive_words, negative_words)
         for item in extracted:
             p = item["point"]
             s = item["sentiment"]
             point_voice[p][s].append(c.get("post_id", ""))
             if len(point_examples[p][s]) < 2:
-                point_examples[p][s].append(c.get("content", ""))
+                point_examples[p][s].append(content)
 
     result_list = []
     for point, voice in point_voice.items():
