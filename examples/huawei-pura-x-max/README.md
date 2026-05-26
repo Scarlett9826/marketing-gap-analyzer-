@@ -19,7 +19,7 @@ This directory contains a complete GAP analysis for the **Huawei Pura X Max**, a
 | Brand/Huawei | 154 | -0.29 |
 | Wide Foldable Form | 104 | -0.14 |
 | vs Apple | 102 | -0.28 |
-| vs Xiaomi | 84 | -0.27 |
+
 
 ### Category Distribution
 - ④ User-driven: 19 points
