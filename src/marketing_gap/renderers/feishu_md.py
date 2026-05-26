@@ -18,6 +18,7 @@ from ..analysis.gap_matrix import (
     CATEGORY_WEAK,
 )
 from ..config import Config
+from ..crawlers.verify_official import summarize_verification
 from ..utils.text import (
     clean_text,
     is_low_signal,
@@ -548,10 +549,15 @@ def render(
     if src_user:
         P("### 附录 B：数据采集明细\n")
         P("#### B.1 官方轨\n")
-        P("| 来源 | 条数 | 类型 |")
-        P("|---|---|---|")
+        P(f"> 验证状态：{summarize_verification(raw_official)}\n")
+        P("| 来源 | 条数 | 类型 | 验证 |")
+        P("|---|---|---|---|")
         for o in raw_official:
-            P(f"| {o.get('source', '?')} | 1 | {o.get('type', '?')} |")
+            v = o.get("verifiable", "")
+            v_short = v.split(" @")[0] if " @" in v else v
+            if not v:
+                v_short = "—"
+            P(f"| {o.get('source', '?')} | 1 | {o.get('type', '?')} | {v_short} |")
         P("")
         P("#### B.2 用户轨\n")
         P("| 平台 | 条数 |")
@@ -584,10 +590,12 @@ def render(
     P("#### F.3 数据采集说明\n")
     P("| 渠道 | 采集方式 | 说明 |")
     P("|---|---|---|")
-    P("| 官方文案 | 手动收集（官网 / 发布会 / 公众号 / KOL 评测） | 每条标注 source / type / url / verifiable 字段 |")
+    P("| 官方文案 | `mgap verify-official` 自动验证 + 手动收集（官网 / 发布会 / 公众号 / KOL 评测） | 自动验证 URL 可达性 & 内容指纹；每条标注 source / type / url / verifiable 字段 |")
     P("| 微博评论 | `mgap fetch weibo` 直抓 `weibo.com/ajax/statuses/buildComments` API | 需 Cookie 认证，仅一级评论 |")
     P("| B站评论 | MediaCrawler search 模式 | Playwright 自动化浏览器，需要时 QR 扫码 |")
     P("| 小红书评论 | MediaCrawler search 模式 | Playwright 自动化浏览器，xsec_token 约 2h 过期 |")
+    P("| 知乎评论 | MediaCrawler search 模式 | Playwright 自动化机器人，需要时 QR 扫码 |")
+    P("| 抖音评论 | MediaCrawler search 模式 | Playwright 自动化机器人，需要时 QR 扫码 |")
     P("")
 
     P("#### F.4 已知数据局限\n")

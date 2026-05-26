@@ -13,8 +13,9 @@ Examples::
   mgap fetch weibo --urls urls.txt --cookie weibo_cookie.json -o data/raw_user.json
   mgap fetch bilibili --keywords "Pura X Max" -o data/bili.json
   mgap fetch xiaohongshu --keywords "Pura X Max" -o data/xhs.json
-  mgap -c config.yaml analyze
-  mgap -c config.yaml extract-official -o out/points.json
+   mgap -c config.yaml verify-official     # (optional) verify URLs + auto-fill verifiable
+   mgap -c config.yaml analyze
+   mgap -c config.yaml extract-official -o out/points.json
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ from pathlib import Path
 from . import __version__
 from .analysis.gap_matrix import run_gap_analysis
 from .config import Config
+from .crawlers.verify_official import verify_official
 from .extractors.official import extract_official
 from .extractors.user import extract_user
 from .renderers.feishu_md import render as render_feishu
@@ -71,6 +73,10 @@ def cmd_render(args: argparse.Namespace) -> None:
         render_html(args.config, output_path=out)
 
 
+def cmd_verify_official(args: argparse.Namespace) -> None:
+    verify_official(args.config)
+
+
 def cmd_analyze(args: argparse.Namespace) -> None:
     """Run full pipeline: extract-official → extract-user → gap-matrix → render."""
     print("=" * 60)
@@ -85,7 +91,10 @@ def cmd_analyze(args: argparse.Namespace) -> None:
     print(f"  Outputs: {cfg.outputs}")
     print()
 
-    print(">>> Step 1/4: Extracting official selling points...")
+    print(">>> Step 0/4: Verifying official document URLs...")
+    verify_official(args.config)
+
+    print("\n>>> Step 1/4: Extracting official selling points...")
     extract_official(args.config)
 
     print("\n>>> Step 2/4: Extracting user voice...")
@@ -231,6 +240,9 @@ def build_parser() -> argparse.ArgumentParser:
     p3 = sub.add_parser("gap-matrix", help="Step 3: run GAP matrix analysis")
     p3.add_argument("--output", "-o", help="Output JSON path (overrides config)")
 
+    p_vfy = sub.add_parser("verify-official", help="Step 0: verify official document URLs (reachable + content match)")
+    p_vfy.add_argument("--output", "-o", help="Output JSON path (overrides config)")
+
     p4 = sub.add_parser("render", help="Step 4: render Feishu Markdown / HTML report")
     p4.add_argument("--output", "-o", help="Output path (overrides config)")
     p4.add_argument("--format", default="feishu", choices=["feishu", "html", "both"],
@@ -290,6 +302,7 @@ def build_parser() -> argparse.ArgumentParser:
 # Map (command, subcommand) → handler.
 ANALYSIS_COMMANDS = {
     "analyze": cmd_analyze,
+    "verify-official": cmd_verify_official,
     "extract-official": cmd_extract_official,
     "extract-user": cmd_extract_user,
     "gap-matrix": cmd_gap_matrix,

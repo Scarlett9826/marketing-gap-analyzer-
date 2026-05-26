@@ -187,6 +187,152 @@ def test_normalise_douyin(tmp_path):
     assert "douyin.com/video/video456" in out[0]["url"]
 
 
+# ---------------------------------------------------------------------------
+# verify_official tests
+# ---------------------------------------------------------------------------
+
+class _MockResponse:
+    """Minimal requests.Response stand-in for mocking."""
+    def __init__(self, status_code=200, text="", headers=None):
+        self.status_code = status_code
+        self.text = text
+        self.headers = headers or {}
+
+
+def test_verify_entry_no_url():
+    from marketing_gap.crawlers.verify_official import verify_entry
+    entry = {"source": "test", "content": "some body"}
+    result = verify_entry(entry)
+    assert "no URL" in result["verifiable"]
+
+
+def test_verify_entry_empty_url():
+    from marketing_gap.crawlers.verify_official import verify_entry
+    entry = {"url": "", "content": "some body"}
+    result = verify_entry(entry)
+    assert "no URL" in result["verifiable"]
+
+
+def test_verify_entry_content_match(monkeypatch):
+    import requests
+    from marketing_gap.crawlers.verify_official import verify_entry
+
+    body = "Prefix: Pura X is the best phone ever made! Extra text beyond — this is on the page."
+    fingerprint_50 = body[:50]  # "Prefix: Pura X is the best phone ever made! Extra text"
+
+    def mock_head(*args, **kwargs):
+        return _MockResponse(status_code=200)
+    def mock_get(*args, **kwargs):
+        return _MockResponse(status_code=200, text=body)
+
+    monkeypatch.setattr(requests, "head", mock_head)
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    entry = {
+        "source": "产品页",
+        "url": "https://example.com/pura-x",
+        "content": body + " More text beyond the body in the entry field.",
+    }
+    result = verify_entry(entry)
+    assert result["verifiable"].startswith("✅ verified")
+
+
+def test_verify_entry_content_mismatch(monkeypatch):
+    import requests
+    from marketing_gap.crawlers.verify_official import verify_entry
+
+    def mock_head(*args, **kwargs):
+        return _MockResponse(status_code=200)
+    def mock_get(*args, **kwargs):
+        return _MockResponse(status_code=200, text="Some completely different content")
+
+    monkeypatch.setattr(requests, "head", mock_head)
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    entry = {
+        "source": "产品页",
+        "url": "https://example.com/pura-x",
+        "content": "This is the Pura X content fingerprint here with more text",
+    }
+    result = verify_entry(entry)
+    assert "⚠️" in result["verifiable"] or "content mismatch" in result["verifiable"]
+
+
+def test_verify_entry_url_broken(monkeypatch):
+    import requests
+    from marketing_gap.crawlers.verify_official import verify_entry
+
+    def mock_head(*args, **kwargs):
+        return _MockResponse(status_code=404)
+
+    monkeypatch.setattr(requests, "head", mock_head)
+
+    entry = {
+        "source": "产品页",
+        "url": "https://example.com/not-found",
+        "content": "some content",
+    }
+    result = verify_entry(entry)
+    assert "URL broken" in result["verifiable"]
+
+
+def test_verify_entry_unreachable(monkeypatch):
+    import requests
+    from marketing_gap.crawlers.verify_official import verify_entry
+
+    def mock_both(*args, **kwargs):
+        raise requests.ConnectionError("DNS failure")
+
+    monkeypatch.setattr(requests, "head", mock_both)
+    monkeypatch.setattr(requests, "get", mock_both)
+
+    entry = {
+        "source": "产品页",
+        "url": "https://example.com/broken",
+        "content": "some content",
+    }
+    result = verify_entry(entry)
+    assert "unreachable" in result["verifiable"]
+
+
+def test_verify_entry_short_content(monkeypatch):
+    import requests
+    from marketing_gap.crawlers.verify_official import verify_entry
+
+    def mock_head(*args, **kwargs):
+        return _MockResponse(status_code=200)
+    def mock_get(*args, **kwargs):
+        return _MockResponse(status_code=200, text="Hello World")
+
+    monkeypatch.setattr(requests, "head", mock_head)
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    entry = {
+        "source": "产品页",
+        "url": "https://example.com/",
+        "content": "Hi",
+    }
+    result = verify_entry(entry)
+    # content < 30 chars → only URL reachable check
+    assert "✅ URL reachable" in result["verifiable"]
+
+
+def test_summarize_verification():
+    from marketing_gap.crawlers.verify_official import summarize_verification
+    docs = [
+        {"verifiable": "✅ verified @ 2026-05-26"},
+        {"verifiable": "✅ URL reachable @ 2026-05-26"},
+        {"verifiable": "⚠️ URL broken @ 2026-05-26"},
+        {"verifiable": "❌ unreachable @ 2026-05-26"},
+        {"verifiable": "⚠️ no URL @ 2026-05-26"},
+    ]
+    s = summarize_verification(docs)
+    assert "2 verified" in s
+    assert "3 issues" in s
+    assert "1 no URL" in s
+    assert "5 条" in s
+
+
 def test_write_and_append_records(tmp_path):
     p = tmp_path / "out.json"
     write_records([{"id": 1}], p)
