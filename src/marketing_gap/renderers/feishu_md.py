@@ -135,6 +135,8 @@ PLATFORM_LINK_TEMPLATES = {
     "B站评论": lambda note, post: f"https://www.bilibili.com/video/av{note}/#reply{post}" if note else "",
     "B站官方号评论": lambda note, post: f"https://www.bilibili.com/video/av{note}/#reply{post}" if note else "",
     "小红书评论": lambda note, post: f"https://www.xiaohongshu.com/explore/{note}" if note else "",
+    "知乎评论": lambda note, post: f"https://www.zhihu.com/answer/{note}" if note else "",
+    "抖音评论": lambda note, post: f"https://www.douyin.com/video/{note}" if note else "",
 }
 
 
@@ -158,6 +160,14 @@ def comment_url(c: dict) -> str | None:
     if "小红书" in src:
         if note_id:
             return f"https://www.xiaohongshu.com/explore/{note_id}"
+        return None
+    if "知乎" in src:
+        if note_id:
+            return f"https://www.zhihu.com/answer/{note_id}"
+        return None
+    if "抖音" in src:
+        if note_id:
+            return f"https://www.douyin.com/video/{note_id}"
         return None
     return None
 

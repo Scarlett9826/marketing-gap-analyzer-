@@ -19,6 +19,8 @@ from marketing_gap.crawlers._mediacrawler import (
     normalise_bilibili,
     normalise_xiaohongshu,
 )
+from marketing_gap.crawlers.zhihu import normalise_zhihu
+from marketing_gap.crawlers.douyin import normalise_douyin
 from marketing_gap.crawlers.base import (
     CookieFile,
     CrawlerError,
@@ -133,6 +135,57 @@ def test_normalise_xiaohongshu(tmp_path):
 # ---------------------------------------------------------------------------
 # write/append helpers
 # ---------------------------------------------------------------------------
+
+def test_normalise_zhihu(tmp_path):
+    sample = [
+        {
+            "comment_id": "zh123456",
+            "content_id": "ans789",
+            "content_type": "answer",
+            "content": "这个产品确实不错",
+            "like_count": 42,
+        },
+        {
+            "comment_id": "zh789012",
+            "content_id": "art345",
+            "content_type": "article",
+            "content": "分析得很透彻",
+            "like_count": 7,
+        },
+    ]
+    p = tmp_path / "raw.json"
+    p.write_text(json.dumps(sample), encoding="utf-8")
+    out = normalise_zhihu(p, keywords="Pura X")
+    assert len(out) == 2
+    assert out[0]["source"] == "知乎评论"
+    assert out[0]["post_id"] == "zh123456"
+    assert out[0]["note_id"] == "ans789"
+    assert out[0]["like"] == 42
+    assert "zhihu.com/answer/ans789" in out[0]["url"]
+    assert out[1]["source"] == "知乎评论"
+    assert "zhuanlan.zhihu.com/p/art345" in out[1]["url"]
+    assert out[0]["keyword"] == "Pura X"
+
+
+def test_normalise_douyin(tmp_path):
+    sample = [
+        {
+            "comment_id": "dy123",
+            "aweme_id": "video456",
+            "content": "这个视频拍的太好了",
+            "like_count": 999,
+        },
+    ]
+    p = tmp_path / "raw.json"
+    p.write_text(json.dumps(sample), encoding="utf-8")
+    out = normalise_douyin(p, keywords="Pura X")
+    assert len(out) == 1
+    assert out[0]["source"] == "抖音评论"
+    assert out[0]["post_id"] == "dy123"
+    assert out[0]["note_id"] == "video456"
+    assert out[0]["like"] == 999
+    assert "douyin.com/video/video456" in out[0]["url"]
+
 
 def test_write_and_append_records(tmp_path):
     p = tmp_path / "out.json"

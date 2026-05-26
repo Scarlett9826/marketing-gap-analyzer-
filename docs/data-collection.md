@@ -106,7 +106,7 @@ plugged straight into `config.yaml` as `paths.raw_user`:
 ```json
 [
   {
-    "source": "微博评论" | "B站评论" | "小红书评论",
+    "source": "微博评论" | "B站评论" | "小红书评论" | "知乎评论" | "抖音评论",
     "post_id": "299817811233",
     "note_id": "116594336600271",
     "content": "comment text",

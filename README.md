@@ -1,8 +1,8 @@
 # marketing-gap-analyzer
 
 > **End-to-end competitor marketing GAP analysis tool.**  
-> Fetch raw user comments from Weibo/Bilibili/Xiaohongshu, extract what
-> competitors push officially, cross-reference the two, and produce a
+> Fetch raw user comments from Weibo / Bilibili / Xiaohongshu / Zhihu / Douyin,
+> extract what competitors push officially, cross-reference the two, and produce a
 > Feishu-ready Markdown (or HTML) report — all from a single CLI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -121,6 +121,8 @@ Commands:
   fetch weibo                 Collect Weibo first-level comments
   fetch bilibili              Search + collect Bilibili comments
   fetch xiaohongshu           Search + collect Xiaohongshu comments
+  fetch zhihu                 Search + collect Zhihu comments
+  fetch douyin                Search + collect Douyin comments
 
 Examples:
   mgap                                                # uses ./config.yaml

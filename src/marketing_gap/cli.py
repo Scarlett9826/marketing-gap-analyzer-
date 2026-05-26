@@ -166,6 +166,32 @@ def cmd_fetch_xiaohongshu(args: argparse.Namespace) -> None:
     print(f"Output written to {args.output}")
 
 
+def cmd_fetch_zhihu(args: argparse.Namespace) -> None:
+    from .crawlers.zhihu import fetch_search
+
+    fetch_search(
+        keywords=args.keywords,
+        output_path=args.output,
+        start=args.start,
+        login_type=args.login,
+        mediacrawler_home=args.mediacrawler_home,
+    )
+    print(f"Output written to {args.output}")
+
+
+def cmd_fetch_douyin(args: argparse.Namespace) -> None:
+    from .crawlers.douyin import fetch_search
+
+    fetch_search(
+        keywords=args.keywords,
+        output_path=args.output,
+        start=args.start,
+        login_type=args.login,
+        mediacrawler_home=args.mediacrawler_home,
+    )
+    print(f"Output written to {args.output}")
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -244,6 +270,20 @@ def build_parser() -> argparse.ArgumentParser:
     fx.add_argument("--login", default="qrcode", choices=["qrcode", "phone", "cookie"])
     fx.add_argument("--mediacrawler-home")
 
+    fz = fetch_sub.add_parser("zhihu", help="Search Zhihu and fetch comments (via MediaCrawler)")
+    fz.add_argument("--keywords", required=True)
+    fz.add_argument("--output", "-o", required=True)
+    fz.add_argument("--start", type=int, default=1)
+    fz.add_argument("--login", default="qrcode", choices=["qrcode", "phone", "cookie"])
+    fz.add_argument("--mediacrawler-home")
+
+    fd = fetch_sub.add_parser("douyin", help="Search Douyin and fetch comments (via MediaCrawler)")
+    fd.add_argument("--keywords", required=True)
+    fd.add_argument("--output", "-o", required=True)
+    fd.add_argument("--start", type=int, default=1)
+    fd.add_argument("--login", default="qrcode", choices=["qrcode", "phone", "cookie"])
+    fd.add_argument("--mediacrawler-home")
+
     return parser
 
 
@@ -260,6 +300,8 @@ FETCH_COMMANDS = {
     "weibo": cmd_fetch_weibo,
     "bilibili": cmd_fetch_bilibili,
     "xiaohongshu": cmd_fetch_xiaohongshu,
+    "zhihu": cmd_fetch_zhihu,
+    "douyin": cmd_fetch_douyin,
 }
 
 
