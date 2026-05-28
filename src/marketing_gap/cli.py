@@ -40,6 +40,7 @@ from .renderers.html import render_html
 # ---------------------------------------------------------------------------
 
 def cmd_extract_official(args: argparse.Namespace) -> None:
+    """Extract official selling points from competitor marketing copy."""
     result = extract_official(args.config, output_path=args.output)
     if args.output:
         print(f"Output written to {args.output}")
@@ -48,6 +49,7 @@ def cmd_extract_official(args: argparse.Namespace) -> None:
 
 
 def cmd_extract_user(args: argparse.Namespace) -> None:
+    """Extract user voice and sentiment from user comments."""
     result = extract_user(args.config, output_path=args.output)
     if args.output:
         print(f"Output written to {args.output}")
@@ -56,10 +58,12 @@ def cmd_extract_user(args: argparse.Namespace) -> None:
 
 
 def cmd_gap_matrix(args: argparse.Namespace) -> None:
+    """Run GAP matrix analysis comparing official vs user data."""
     run_gap_analysis(args.config, output_path=args.output)
 
 
 def cmd_render(args: argparse.Namespace) -> None:
+    """Render analysis results to Feishu Markdown or HTML."""
     fmt = getattr(args, "format", "feishu")
     if fmt in ("feishu", "both"):
         render_feishu(args.config, output_path=args.output)
@@ -74,11 +78,28 @@ def cmd_render(args: argparse.Namespace) -> None:
 
 
 def cmd_verify_official(args: argparse.Namespace) -> None:
+    """Verify official document URLs and content."""
     verify_official(args.config)
 
 
+def cmd_check_model(args: argparse.Namespace) -> None:
+    """Probe the configured LLM endpoint and report availability."""
+    cfg = Config(args.config, strict=False)
+    info = cfg.check_model_capability()
+    if info["available"]:
+        print(f"Model: {info['model']}")
+        models = info.get("models_found", [])
+        if models:
+            print(f"Available models: {', '.join(models)}")
+        print("Status: OK")
+    else:
+        print(f"Status: UNAVAILABLE")
+        print(f"Error: {info['error']}")
+        raise SystemExit(1)
+
+
 def cmd_analyze(args: argparse.Namespace) -> None:
-    """Run full pipeline: extract-official → extract-user → gap-matrix → render."""
+    """Run full pipeline: extract-official -> extract-user -> gap-matrix -> render."""
     print("=" * 60)
     print("  marketing-gap-analyzer — Full Analysis Pipeline")
     print("=" * 60)
@@ -127,78 +148,153 @@ def _read_url_list(arg: str) -> list[str]:
     return [u.strip() for u in arg.split(",") if u.strip()]
 
 
+def _validate_output_dir(output_path: str) -> Path:
+    """Ensure the parent directory of *output_path* is writable.
+
+    Returns the resolved output directory.  Exits with code 2 on failure.
+    """
+    out_dir = Path(output_path).parent
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+    except PermissionError:
+        print(f"Error: Cannot create output directory: {out_dir}", file=sys.stderr)
+        print("Hint: Check directory permissions.", file=sys.stderr)
+        raise SystemExit(2)
+    return out_dir
+
+
+def _run_mediacrawler_fetch(
+    platform: str,
+    normalise_fn,
+    *,
+    keywords: str,
+    output_path: str,
+    start: int,
+    login_type: str,
+    mediacrawler_home: str | None,
+) -> None:
+    """Shared handler for platforms that delegate to MediaCrawler.
+
+    Parameters
+    ----------
+    platform:
+        Platform identifier passed to MediaCrawler (``"bili"``, ``"xhs"``,
+        ``"zhihu"``, ``"dy"``).
+    normalise_fn:
+        Module-level normalise function for the platform.
+    """
+    from .crawlers._mediacrawler import (
+        _find_latest_comments_file,
+        resolve_home,
+        run_mediacrawler,
+    )
+    from .crawlers.base import write_records
+
+    home = resolve_home(mediacrawler_home)
+    run_mediacrawler(
+        platform=platform,
+        crawler_type="search",
+        keywords=keywords,
+        start=start,
+        login_type=login_type,
+        save_data_option="json",
+        home=home,
+    )
+    raw = _find_latest_comments_file(home / "data", platform, "search_comments")
+    records = normalise_fn(raw, keywords=keywords)
+    write_records(records, output_path)
+    print(f"Output written to {output_path}")
+
+
 def cmd_fetch_weibo(args: argparse.Namespace) -> None:
+    """Fetch first-level comments from Weibo URLs."""
     from .crawlers.weibo import WeiboCrawlConfig, fetch_many
+
+    if not Path(args.cookie).exists():
+        print(f"Error: Cookie file not found: {args.cookie}", file=sys.stderr)
+        print("Hint: Create a weibo_cookie.json file first. See docs/data-collection.md", file=sys.stderr)
+        raise SystemExit(2)
 
     urls = _read_url_list(args.urls)
     if not urls:
-        raise SystemExit("Error: --urls produced no entries (file empty?).")
+        print("Error: --urls produced no entries (file empty?).", file=sys.stderr)
+        print("Hint: Check if the URL file exists and contains valid URLs.", file=sys.stderr)
+        raise SystemExit(2)
+
+    _validate_output_dir(args.output)
 
     cfg = WeiboCrawlConfig(
         sleep_per_request=args.sleep,
         max_comments_per_post=args.max_comments,
         fetch_second_level=args.replies,
     )
-    out_dir = Path(args.work_dir or Path(args.output).with_suffix("") )
     fetch_many(
         urls,
         cookie_path=args.cookie,
-        output_dir=out_dir,
+        output_dir=Path(args.work_dir or str(Path(args.output).with_suffix(""))) if args.work_dir else Path(args.output).with_suffix(""),
         merged_output=args.output,
         config=cfg,
     )
 
 
 def cmd_fetch_bilibili(args: argparse.Namespace) -> None:
-    from .crawlers.bilibili import fetch_search
+    """Search Bilibili and fetch comments via MediaCrawler."""
+    from .crawlers._mediacrawler import normalise_bilibili
 
-    fetch_search(
+    _run_mediacrawler_fetch(
+        "bili",
+        normalise_bilibili,
         keywords=args.keywords,
         output_path=args.output,
         start=args.start,
         login_type=args.login,
         mediacrawler_home=args.mediacrawler_home,
     )
-    print(f"Output written to {args.output}")
 
 
 def cmd_fetch_xiaohongshu(args: argparse.Namespace) -> None:
-    from .crawlers.xiaohongshu import fetch_search
+    """Search Xiaohongshu and fetch comments via MediaCrawler."""
+    from .crawlers._mediacrawler import normalise_xiaohongshu
 
-    fetch_search(
+    _run_mediacrawler_fetch(
+        "xhs",
+        normalise_xiaohongshu,
         keywords=args.keywords,
         output_path=args.output,
         start=args.start,
         login_type=args.login,
         mediacrawler_home=args.mediacrawler_home,
     )
-    print(f"Output written to {args.output}")
 
 
 def cmd_fetch_zhihu(args: argparse.Namespace) -> None:
-    from .crawlers.zhihu import fetch_search
+    """Search Zhihu and fetch comments via MediaCrawler."""
+    from .crawlers.zhihu import normalise_zhihu
 
-    fetch_search(
+    _run_mediacrawler_fetch(
+        "zhihu",
+        normalise_zhihu,
         keywords=args.keywords,
         output_path=args.output,
         start=args.start,
         login_type=args.login,
         mediacrawler_home=args.mediacrawler_home,
     )
-    print(f"Output written to {args.output}")
 
 
 def cmd_fetch_douyin(args: argparse.Namespace) -> None:
-    from .crawlers.douyin import fetch_search
+    """Search Douyin and fetch comments via MediaCrawler."""
+    from .crawlers.douyin import normalise_douyin
 
-    fetch_search(
+    _run_mediacrawler_fetch(
+        "dy",
+        normalise_douyin,
         keywords=args.keywords,
         output_path=args.output,
         start=args.start,
         login_type=args.login,
         mediacrawler_home=args.mediacrawler_home,
     )
-    print(f"Output written to {args.output}")
 
 
 # ---------------------------------------------------------------------------
@@ -247,6 +343,9 @@ def build_parser() -> argparse.ArgumentParser:
     p4.add_argument("--output", "-o", help="Output path (overrides config)")
     p4.add_argument("--format", default="feishu", choices=["feishu", "html", "both"],
                     help="Output format (default: feishu)")
+
+    p_cm = sub.add_parser("check-model", help="Probe LLM endpoint and report availability")
+    p_cm.add_argument("--output", "-o", help="(ignored, for interface consistency)")
 
     # --- fetch (data collection) -------------------------------------------
     fetch = sub.add_parser(
@@ -307,6 +406,7 @@ ANALYSIS_COMMANDS = {
     "extract-user": cmd_extract_user,
     "gap-matrix": cmd_gap_matrix,
     "render": cmd_render,
+    "check-model": cmd_check_model,
 }
 
 FETCH_COMMANDS = {
@@ -358,10 +458,24 @@ def main(argv: list[str] | None = None) -> int:
         handler(args)
         return 0
     except FileNotFoundError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
+        print(f"Error: File not found - {exc}", file=sys.stderr)
+        print("Hint: Check if the file path is correct and the file exists.", file=sys.stderr)
         return 2
+    except ValueError as exc:
+        print(f"Error: Invalid configuration - {exc}", file=sys.stderr)
+        print("Hint: Verify your config.yaml file syntax and required fields.", file=sys.stderr)
+        return 2
+    except ConnectionError as exc:
+        print(f"Error: Network connection failed - {exc}", file=sys.stderr)
+        print("Hint: Check your internet connection and API endpoints.", file=sys.stderr)
+        return 1
+    except PermissionError as exc:
+        print(f"Error: Permission denied - {exc}", file=sys.stderr)
+        print("Hint: Check file permissions and try running with appropriate privileges.", file=sys.stderr)
+        return 1
     except Exception as exc:
         print(f"Error: {type(exc).__name__}: {exc}", file=sys.stderr)
+        print("Hint: Run with --verbose flag for more details.", file=sys.stderr)
         return 1
 
 
