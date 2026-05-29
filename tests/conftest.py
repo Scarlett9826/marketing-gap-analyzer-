@@ -8,6 +8,52 @@ from pathlib import Path
 import pytest
 
 
+# ---------------------------------------------------------------------------
+# Network isolation: every test gets fake HTTP by default
+# ---------------------------------------------------------------------------
+
+
+class _FakeResponse:
+    """Minimal ``requests.Response`` stand-in for offline tests."""
+
+    def __init__(self, status_code: int = 404, text: str = "", url: str = ""):
+        self.status_code = status_code
+        self.text = text
+        self.url = url
+        self.headers: dict[str, str] = {}
+
+    def raise_for_status(self) -> None:
+        if self.status_code >= 400:
+            import requests
+            raise requests.HTTPError(f"{self.status_code} for {self.url}")
+
+    def json(self) -> dict:
+        return {"data": []}
+
+
+@pytest.fixture(autouse=True)
+def _block_network(monkeypatch):
+    """Auto-applied: replace ``requests.head`` / ``requests.get`` with fakes.
+
+    Tests that need specific HTTP behaviour can override the fakes by
+    calling ``monkeypatch.setattr(requests, "head", ...)`` themselves.
+    """
+    import requests
+
+    def fake_head(url, *args, **kwargs):
+        return _FakeResponse(status_code=404, url=url)
+
+    def fake_get(url, *args, **kwargs):
+        # Local-loopback test endpoints stay local; everything else is 404.
+        if "localhost" in url or "127.0.0.1" in url:
+            raise requests.ConnectionError(f"refused (test): {url}")
+        return _FakeResponse(status_code=404, url=url)
+
+    monkeypatch.setattr(requests, "head", fake_head)
+    monkeypatch.setattr(requests, "get", fake_get)
+    yield
+
+
 SAMPLE_OFFICIAL = [
     {
         "source": "Product Page",

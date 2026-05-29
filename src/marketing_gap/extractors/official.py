@@ -62,7 +62,14 @@ def extract_official(
     if cfg.raw_official is None or not cfg.raw_official.exists():
         raise FileNotFoundError(f"raw_official not found: {cfg.raw_official}")
 
-    docs = json.loads(cfg.raw_official.read_text(encoding="utf-8"))
+    docs, schema_errors = Config.load_and_validate_json(cfg.raw_official, validator="official")
+    if schema_errors:
+        import sys
+        print(f"Warning: raw_official has {len(schema_errors)} schema issue(s):", file=sys.stderr)
+        for err in schema_errors[:5]:
+            print(f"  - {err}", file=sys.stderr)
+        if len(schema_errors) > 5:
+            print(f"  ... and {len(schema_errors) - 5} more", file=sys.stderr)
     print(f"Loaded {len(docs)} official documents")
 
     dict_map = cfg.official_dict

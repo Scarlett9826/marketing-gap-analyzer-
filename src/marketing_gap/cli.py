@@ -112,8 +112,11 @@ def cmd_analyze(args: argparse.Namespace) -> None:
     print(f"  Outputs: {cfg.outputs}")
     print()
 
-    print(">>> Step 0/4: Verifying official document URLs...")
-    verify_official(args.config)
+    if getattr(args, "skip_verify", False):
+        print(">>> Step 0/4: Verifying official document URLs... [SKIPPED via --skip-verify]")
+    else:
+        print(">>> Step 0/4: Verifying official document URLs...")
+        verify_official(args.config)
 
     print("\n>>> Step 1/4: Extracting official selling points...")
     extract_official(args.config)
@@ -228,10 +231,11 @@ def cmd_fetch_weibo(args: argparse.Namespace) -> None:
         max_comments_per_post=args.max_comments,
         fetch_second_level=args.replies,
     )
+    out_dir = Path(args.work_dir) if args.work_dir else Path(args.output).with_suffix("")
     fetch_many(
         urls,
         cookie_path=args.cookie,
-        output_dir=Path(args.work_dir or str(Path(args.output).with_suffix(""))) if args.work_dir else Path(args.output).with_suffix(""),
+        output_dir=out_dir,
         merged_output=args.output,
         config=cfg,
     )
@@ -325,7 +329,12 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar="COMMAND")
 
     # --- analysis -----------------------------------------------------------
-    sub.add_parser("analyze", help="Run full analysis pipeline (default)")
+    p_anlz = sub.add_parser("analyze", help="Run full analysis pipeline (default)")
+    p_anlz.add_argument(
+        "--skip-verify",
+        action="store_true",
+        help="Skip Step 0 (URL verification of raw_official). Use when re-running offline.",
+    )
 
     p1 = sub.add_parser("extract-official", help="Step 1: extract official selling points")
     p1.add_argument("--output", "-o", help="Output JSON path (overrides config)")

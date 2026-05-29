@@ -99,7 +99,14 @@ def extract_user(
     if cfg.raw_user is None or not cfg.raw_user.exists():
         raise FileNotFoundError(f"raw_user not found: {cfg.raw_user}")
 
-    comments = json.loads(cfg.raw_user.read_text(encoding="utf-8"))
+    comments, schema_errors = Config.load_and_validate_json(cfg.raw_user, validator="user")
+    if schema_errors:
+        import sys
+        print(f"Warning: raw_user has {len(schema_errors)} schema issue(s):", file=sys.stderr)
+        for err in schema_errors[:5]:
+            print(f"  - {err}", file=sys.stderr)
+        if len(schema_errors) > 5:
+            print(f"  ... and {len(schema_errors) - 5} more", file=sys.stderr)
     print(f"Loaded {len(comments)} user comments")
 
     dict_map = cfg.user_dict

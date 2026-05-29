@@ -49,6 +49,17 @@ def test_cli_default_subcommand_is_analyze(sample_project: Path) -> None:
     assert (sample_project.parent / "output" / "report.md").exists()
 
 
+def test_cli_analyze_skip_verify(sample_project: Path, capsys) -> None:
+    """--skip-verify omits the URL verification step."""
+    rc = main(["-c", str(sample_project), "analyze", "--skip-verify"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "SKIPPED via --skip-verify" in out
+    # Still produces all four pipeline outputs
+    output_dir = sample_project.parent / "output"
+    assert (output_dir / "report.md").exists()
+
+
 def test_cli_extract_user_with_output(sample_project: Path, tmp_path: Path) -> None:
     out = tmp_path / "voice.json"
     rc = main(["-c", str(sample_project), "extract-user", "-o", str(out)])

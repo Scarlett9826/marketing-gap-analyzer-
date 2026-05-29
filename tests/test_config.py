@@ -95,7 +95,7 @@ def test_env_priority_over_environ(tmp_path: Path, monkeypatch) -> None:
     assert cfg.deepseek_api_key == "from-dotenv"
 
 
-def test_mgap_stRICT_env_enables_strict(tmp_path: Path, monkeypatch) -> None:
+def test_mgap_strict_env_enables_strict(tmp_path: Path, monkeypatch) -> None:
     """Setting MGAP_STRICT=1 activates strict validation."""
     monkeypatch.setenv("MGAP_STRICT", "1")
     nonexistent = tmp_path / "nope.yaml"
